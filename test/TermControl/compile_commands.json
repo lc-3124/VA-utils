@@ -1,0 +1,15 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-12",
+      "-c",
+      "TermControl.cpp",
+      "-I../../include/",
+      "-o",
+      "TermControl"
+    ],
+    "directory": "/home/lc3124/clone/VA-untils/test/TermControl",
+    "file": "/home/lc3124/clone/VA-untils/test/TermControl/TermControl.cpp",
+    "output": "/home/lc3124/clone/VA-untils/test/TermControl/TermControl.o"
+  }
+]
