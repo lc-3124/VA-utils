@@ -1,0 +1,16 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-12",
+      "-c",
+      "utftool.cpp",
+      "-I../../include/",
+      "-O",
+      "-o",
+      "utftool"
+    ],
+    "directory": "/home/lc3124/clone/VA-untils/test/utftool",
+    "file": "/home/lc3124/clone/VA-untils/test/utftool/utftool.cpp",
+    "output": "/home/lc3124/clone/VA-untils/test/utftool/utftool.o"
+  }
+]

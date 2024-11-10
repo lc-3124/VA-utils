@@ -7,7 +7,7 @@ untils for VAWK
 - [x] Rgb to 256color code change
 - [x] Mix ansi two 256 colors
 - [x] Anti ansi 256 color
-- [  ] ... 
+- [o] ... 
 
 # term control
 - [x] Disable/enable echo
@@ -15,5 +15,7 @@ untils for VAWK
 - [x] Kbhit
 - [x] Output without buffering
 - [x] And so on
-- [  ] ...
+- [o] ...
 
+# Utf tools
+- [o] ...

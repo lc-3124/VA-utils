@@ -1,19 +1,18 @@
 /*
- * THis file includes a class 
+ * THis file includes a class
  * Be used to control the terminal for tui
  * The name of methods are clear so i would not make a lot of comments
  *
  */
-//std
-#include <iostream>
+// std
 #include <cstdio>
 #include <cstring>
-//sys
+#include <iostream>
+// sys
+#include <fcntl.h>
+#include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-
 
 /*
  * VatermControl
@@ -22,7 +21,7 @@
  * //Create and save the Attributes
  *  VaTermControl *Myterm = new VaTermControl;
  * //use it
- *  Myterm -> disableEcho(); 
+ *  Myterm -> disableEcho();
  * //release and set the original Attributes
  *  delete Myterm
  *
@@ -30,61 +29,61 @@
 
 class VaTermControl {
 public:
-    VaTermControl();
-    ~VaTermControl();
+  VaTermControl();
+  ~VaTermControl();
 
-    void getTerminalAttributes();
+  void getTerminalAttributes();
 
-    void setTerminalAttributes(const termios& newAttrs);
+  void setTerminalAttributes(const termios &newAttrs);
 
-    void enableEcho();
+  void enableEcho();
 
-    void disableEcho();
+  void disableEcho();
 
-    void enableConsoleBuffering();
+  void enableConsoleBuffering();
 
-    void disableConsoleBuffering();
-    
-    void getTerminalSize(int& rows, int& cols);
+  void disableConsoleBuffering();
 
-    void setCursorPosition(int row, int col);
+  void getTerminalSize(int &rows, int &cols);
 
-    void clearScreen();
+  void setCursorPosition(int row, int col);
 
-    void saveCursorPosition();
+  void clearScreen();
 
-    void restoreCursorPosition();
+  void saveCursorPosition();
 
-    void setTextColor(int color);
+  void restoreCursorPosition();
 
-    void setBackgroundColor(int color);
+  void setTextColor(int color);
 
-    void fastOutput(const char* str);
+  void setBackgroundColor(int color);
 
-    char nonBufferedGetKey();
+  void fastOutput(const char *str);
 
-    const char* getTerminalType();
+  char nonBufferedGetKey();
 
-    bool isTerminalFeatureSupported(const char* feature);
+  const char *getTerminalType();
 
-    void setLineBuffering(bool enable);
+  bool isTerminalFeatureSupported(const char *feature);
 
-    void setCharacterDelay(int milliseconds);
+  void setLineBuffering(bool enable);
 
-    int getInputSpeed();
+  void setCharacterDelay(int milliseconds);
 
-    void setInputSpeed(int speed);
+  int getInputSpeed();
 
-    int getOutputSpeed();
+  void setInputSpeed(int speed);
 
-    void setOutputSpeed(int speed);
-    
-    //like getch()
-    char getCharacter();
-    //like kbhit()
-    bool keyPressed();
+  int getOutputSpeed();
+
+  void setOutputSpeed(int speed);
+
+  // like getch()
+  char getCharacter();
+  // like kbhit()
+  bool keyPressed();
 
 private:
-    termios originalAttrs;
-    termios currentAttrs;
+  termios originalAttrs;
+  termios currentAttrs;
 };
