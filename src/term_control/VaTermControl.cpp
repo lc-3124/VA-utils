@@ -109,7 +109,7 @@ char VaTermControl::getCharacter() {
   return c;
 }
 
-bool VaTermControl::keyPressed() {
+int VaTermControl::keyPressed() {
   struct termios oldt, newt;
   int oldf;
   tcgetattr(STDIN_FILENO, &oldt);
@@ -124,10 +124,10 @@ bool VaTermControl::keyPressed() {
   if (res > 0) {
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     fcntl(STDIN_FILENO, F_SETFL, oldf);
-    return true;
+    return c;
   } else {
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     fcntl(STDIN_FILENO, F_SETFL, oldf);
-    return false;
+    return -1;
   }
 }

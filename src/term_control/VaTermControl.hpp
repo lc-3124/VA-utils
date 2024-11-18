@@ -48,15 +48,9 @@ public:
 
   void setCursorPosition(int row, int col);
 
-  void clearScreen();
-
   void saveCursorPosition();
 
   void restoreCursorPosition();
-
-  void setTextColor(int color);
-
-  void setBackgroundColor(int color);
 
   void fastOutput(const char *str);
 
@@ -80,8 +74,8 @@ public:
 
   // like getch()
   char getCharacter();
-  // like kbhit()
-  bool keyPressed();
+  // like kbhit(),but return the pressed key code 
+  int  keyPressed();
 
 private:
   termios originalAttrs;
