@@ -1,21 +1,6 @@
-# VA-untils
+## VA-untils
 untils for VAWK
+# 我打算重构这个类,完善G++的一系列警告以及修正各种命名不规范的问题
 
-## main functions:
 
-# ansi 256 colors's control
-- [x] Rgb to 256color code change
-- [x] Mix ansi two 256 colors
-- [x] Anti ansi 256 color
-- [o] ... 
 
-# term control
-- [x] Disable/enable echo
-- [x] Getch
-- [x] Kbhit
-- [x] Output without buffering
-- [x] And so on
-- [o] ...
-
-# Utf tools
-- [o] ...
