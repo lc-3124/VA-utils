@@ -1,3 +1,9 @@
+#pragma once
+/*
+ * copyright lc-3124 release 2024 
+ * LICENSE (MIT)
+ */
+
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -5,16 +11,10 @@
 #include <codecvt>
 #include <locale>
 
-//copy right lc3124 release 2014
-//LICENCE (MIT)
+class VaUtf
+{
 
-/*
- * This file contains a class
- * used to process some utf8 or other strings
- */
-
-
-//get the width of a UTF* character 
+//get the width of a UTF character 
 size_t getUtf8CharWidth(const char* s) {
     if (!s ||!*s) return 0;
     unsigned char c = static_cast<unsigned char>(*s);
@@ -65,3 +65,5 @@ bool isGbkChar(const char* bytes, int len) {
 
 }
 
+
+};
