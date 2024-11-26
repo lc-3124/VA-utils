@@ -12,11 +12,11 @@
  * I consider this file to be a refactoring of Va-unitls 
  */
 
-#include "declare/VaCusor.hpp"
-#include "declare/VaColor.hpp"
-#include "declare/VaTerm.hpp"
-#include "declare/VaSystem.hpp"
-#include "declare/VaUtf.hpp"
+#include "src/VaCusor.hpp"
+#include "src/VaColor.hpp"
+#include "src/VaTerm.hpp"
+#include "src/VaSystem.hpp"
+#include "src/VaUtf.hpp"
 
 class VaTui 
 {
@@ -34,14 +34,31 @@ class VaTui
     public:
         VaTui(){submodel_init();};
     protected:
-        void submodel_init();
+        inline void submodel_init();
 
         /*release VaTui*/
     public:
         ~VaTui(){submodels_del();};
     protected:
-        void submodels_del();
+        inline void submodels_del();
 
 
 };
 
+void VaTui::submodel_init()
+{
+    Cursor = new VaCursor;
+    Color = new VaColor;
+    Term = new VaTerm;
+    System = new VaSystem;
+    Utf = new VaUtf;
+}
+
+void VaTui::submodels_del()
+{
+    delete this->Cursor;
+    delete this->Color;
+    delete this->Term;
+    delete this->System;
+    delete this->Utf;
+}
