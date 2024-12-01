@@ -1,6 +1,6 @@
 #pragma once
 
-/* copyright lc-3124 release 2024
+/* (C) Lc3124 2024
  * LICENSE (MIT)
  *
  * The functions implemented in this file are the basis for VAWK to perform synthesis,
@@ -20,27 +20,22 @@
 
 class VaTui 
 {
-    private://暂时没有
-
-        /*there are the submodels*/
     protected:
+        /*there are the submodels*/
         VaCursor *Cursor;
         VaColor *Color;
         VaTerm *Term;
         VaSystem *System;
         VaUtf *Utf;
-
-        /*init VaTui*/
-    public:
-        VaTui(){submodel_init();};
-    protected:
+        /*      submodules       */
         inline void submodel_init();
-
-        /*release VaTui*/
-    public:
-        ~VaTui(){submodels_del();};
-    protected:
         inline void submodels_del();
+
+    public:
+        /*      init VaTui       */
+        VaTui(){submodel_init();};
+        /*      release VaTui    */
+        ~VaTui(){submodels_del();};
 
 
 };
