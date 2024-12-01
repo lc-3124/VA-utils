@@ -2,7 +2,8 @@
 	#g++
 CC = g++
 	#cflags
-IV = -I../VaTui/
+IV = -I../VaTui/  #include the vatui
+
 
 
 #编译所有
@@ -16,4 +17,4 @@ clear :
 	mkdir build
 
 Userinfo: Userinfo.cpp 
-	${CC} Userinfo.cpp -o Userinfo ${IV}
+	${CC} Userinfo.cpp -o build/Userinfo ${IV}
