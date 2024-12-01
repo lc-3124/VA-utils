@@ -1,7 +1,9 @@
 #pragma once
 /*
- * copyright lc-3124 release 2024 
+ * (C) Lc3124 
+ * release in 2024 
  * LICENSE (MIT)
+ * 这个文件包含一个类，用来识别Utf字节，当然还有一些其他的功能，也会在之后加入新的功能
  */
 
 #include <locale>

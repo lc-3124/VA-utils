@@ -14,6 +14,13 @@
 #include <termios.h>
 #include <unistd.h>
 
+// 定义不同的光标形状常量
+enum CursorShape {
+    CURSOR_BLOCK = 0,
+    CURSOR_UNDERLINE = 1,
+    CURSOR_VERTICAL_BAR = 2
+
+};
 
 class VaTerm
 {
@@ -26,9 +33,14 @@ class VaTerm
             currentAttrs = originalAttrs;
         }
 
+        //释放时会恢复终端设置
         ~VaTerm() {
             tcsetattr(STDIN_FILENO, TCSANOW, &originalAttrs);
         }
+
+        /*
+         * 以下的各功能几乎只是对termios等库的封装
+         */
 
         // Clear the entire screen.
         inline static const char* _Clear()
@@ -111,10 +123,6 @@ class VaTerm
 
         const char *getTerminalType() { return std::getenv("TERM"); }
 
-        bool isTerminalFeatureSupported(const char *feature) {
-            // to do
-            return 0;
-        }
 
         void setLineBuffering(bool enable) {
             if (enable) {
@@ -124,31 +132,63 @@ class VaTerm
             }
             tcsetattr(STDIN_FILENO, TCSANOW, &currentAttrs);
         }
-
-        void setCharacterDelay(int milliseconds) {
-            // to do
-        }
-
-        int getInputSpeed() {
-            // to do
-            return 0;
-        }
-
-        void setInputSpeed(int speed) {
-            // to do
-        }
-
-        void setOutputSpeed(int speed) {
-            // to do
-        }
-
+        
+        //禁止回显，然后阻塞，返回获取到的字符，类似于getch()
         char getCharacter() {
             disableEcho();
             char c = nonBufferedGetKey();
             enableEcho();
             return c;
         }
-         
+        
+        //判断终端是否支持某一功能 
+            bool isTerminalFeatureSupported(const char *feature) {
+                const char *termType = getTerminalType();
+                if (termType == nullptr) {
+                    return false;
+
+                }
+                    if (strstr(termType, feature)!= nullptr) {
+                        return true;
+                    }
+                return false;
+            }
+
+        // 设置字符输入延迟
+        void setCharacterDelay(int milliseconds) {
+            termios newAttrs = currentAttrs;
+                newAttrs.c_cc[VMIN] = 0;
+            newAttrs.c_cc[VTIME] = milliseconds / 100;
+            setTerminalAttributes(newAttrs);
+
+        }
+
+        // 获取输入速度
+        int getInputSpeed() {
+            speed_t speed;
+            tcgetattr(STDIN_FILENO, &currentAttrs);
+            speed = cfgetospeed(&currentAttrs);
+            return static_cast<int>(speed);
+
+        }
+
+        // 设置输入速度
+        void setInputSpeed(int speed) {
+            termios newAttrs = currentAttrs;
+            cfsetospeed(&newAttrs, static_cast<speed_t>(speed));
+            cfsetispeed(&newAttrs, static_cast<speed_t>(speed));
+            setTerminalAttributes(newAttrs);
+
+        }
+
+        // 设置输出速度
+        void setOutputSpeed(int speed) {
+            termios newAttrs = currentAttrs;
+            cfsetospeed(&newAttrs, static_cast<speed_t>(speed));
+            setTerminalAttributes(newAttrs);
+
+        }
+
         int keyPressed(char &k) {
             struct termios oldt, newt;
             int oldf;
@@ -172,5 +212,25 @@ class VaTerm
                 k=static_cast<char>(-1);
                 return -0;
             }
+        }
+
+        // 函数用于设置光标形状
+        void setCursorShape(CursorShape shape) {
+            termios newAttrs = currentAttrs;
+
+            // 根据传入的光标形状设置相应的c_cflag值
+            switch (shape) {
+                case CURSOR_BLOCK:
+                    newAttrs.c_cflag &= ~(ECHOCTL);
+                    break;
+                case CURSOR_UNDERLINE:
+                    newAttrs.c_cflag |= (ECHOCTL | ECHOE);
+                    break;
+                case CURSOR_VERTICAL_BAR:
+                    newAttrs.c_cflag |= ECHOCTL;
+                    break;
+            }
+            // 设置新的终端属性
+            setTerminalAttributes(newAttrs);
         }
 };

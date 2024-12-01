@@ -78,12 +78,15 @@ enum class AnsiEffect {
 
 /*
  * VaColor class
- * VaColor 类是用于管理和操作终端文本颜色以及相关显示效果的核心类，它提供了一系列静态方法来方便地设置文本的颜色、效果等，并且包含了一些用于颜色转换、混合等实用功能的函数，旨在为终端界面开发中涉及颜色处理的场景提供一站式的解决方案。
+ * VaColor 类是用于管理和操作终端文本颜色以及相关显示效果的核心类，
+ * 它提供了一系列静态方法来方便地设置文本的颜色、效果等，并且包含了一些用于颜色转换、混合等实用功能的函数 
+ * 旨在为终端界面开发中涉及颜色处理的场景提供一站式的解决方案。
  */
 class VaColor
 {
     private:
-        // 一个私有静态函数，用于快速将给定的字符串输出到标准输出（STDOUT），通过系统函数 write 实现，主要在类内部其他函数中用于输出 ANSI 转义序列等控制字符来改变终端的显示效果。
+        // 一个私有静态函数，用于快速将给定的字符串输出到标准输出（STDOUT），
+        // 通过系统函数 write 实现，主要在类内部其他函数中用于输出 ANSI 转义序列等控制字符来改变终端的显示效果。
         inline static void fastOutput(const char *str) {
             write(STDOUT_FILENO, str, strlen(str));
         }
@@ -95,7 +98,8 @@ class VaColor
         // Set the text and background's colors.
         // low bit
         // 生成用于设置4位颜色模式下文本前景色和背景色的 ANSI 转义序列字符串，并返回该字符串指针。
-        // 此函数根据传入的前景色和背景色参数，按照 ANSI 转义序列的格式要求，使用 snprintf 函数将相应代码格式化为字符串存储在 escapeCommand 数组中，供后续输出使用。
+        // 此函数根据传入的前景色和背景色参数，按照 ANSI 转义序列的格式要求，
+        // 使用 snprintf 函数将相应代码格式化为字符串存储在 escapeCommand 数组中，供后续输出使用。
         inline static const char* _SetColor4bit(int front, int background)
         {
             static char escapeCommand[64];
@@ -109,7 +113,8 @@ class VaColor
         }
         //16 bit
         // 生成用于设置16位颜色模式下文本前景色和背景色的 ANSI 转义序列字符串，返回该字符串指针。
-        // 按照 ANSI 转义序列中针对16位颜色模式的特定格式，结合传入的前景色和背景色参数，使用 snprintf 函数构造相应字符串，存储在 escapecommand 数组中供后续输出到终端来改变颜色显示。
+        // 按照 ANSI 转义序列中针对16位颜色模式的特定格式，结合传入的前景色和背景色参数，
+        // 使用 snprintf 函数构造相应字符串，存储在 escapecommand 数组中供后续输出到终端来改变颜色显示。
         inline static const char* _SetColor256(int front, int background)
         { 
             static char escapecommand[64];
@@ -124,7 +129,9 @@ class VaColor
 
         //full color
         // 生成用于设置全彩色（RGB模式）背景色的 ANSI 转义序列字符串，不过由于作者不确定其所在控制台是否支持 RGB 颜色，所以其实际可用性可能需进一步测试验证。
-        // 根据传入的红（R）、绿（G）、蓝（B）三个颜色分量的值（通常范围是0 - 255），按照 ANSI 转义序列中 RGB 颜色设置的格式要求，使用 snprintf 函数构造相应字符串并存储在 escapecommand 数组中，返回该数组指针供后续输出操作。
+        // 根据传入的红（R）、绿（G）、蓝（B）三个颜色分量的值（通常范围是0 - 255），
+        // 按照 ANSI 转义序列中 RGB 颜色设置的格式要求，
+        // 使用 snprintf 函数构造相应字符串并存储在 escapecommand 数组中，返回该数组指针供后续输出操作。
         inline static const char* _set_background_color_RGB(int R,int B,int G)
         {
             static char escapecommand[64];
@@ -138,14 +145,17 @@ class VaColor
         }
 
         // 生成用于设置全彩色（RGB模式）前景色的 ANSI 转义序列字符串，同样存在因终端支持情况不确定而需测试其实际可用性的问题。
-        // 依据传入的红（R）、绿（G）、蓝（B）三个颜色分量的值，按照相应的 ANSI 转义序列格式，使用 snprintf 函数构建字符串并存入 escapecommand 数组，返回该数组指针供后续输出以改变前景色显示。
+        // 依据传入的红（R）、绿（G）、蓝（B）三个颜色分量的值，
+        // 按照相应的 ANSI 转义序列格式，
+        // 使用 snprintf 函数构建字符串并存入 escapecommand 数组，返回该数组指针供后续输出以改变前景色显示。
         inline static const char* _set_front_color_RGB(int R,int B,int G)
         {
             static char escapecommand[64];
             snprintf(escapecommand, sizeof(escapecommand),"\033[38;2;%d,%d,%dm",R,G,B);
             return escapecommand;
         }
-        // 利用 fastOutput 函数输出由 _set_front_color_RGB 生成的 ANSI 转义序列，在终端上设置文本的前景色为指定的 RGB 颜色，其效果依赖终端对 RGB 颜色的支持与否。
+        // 利用 fastOutput 函数输出由 _set_front_color_RGB 生成的 ANSI 转义序列，
+        // 在终端上设置文本的前景色为指定的 RGB 颜色，其效果依赖终端对 RGB 颜色的支持与否。
         inline static void set_front_color_RGB(int R, int B,int G)
         {
             fastOutput(_set_front_color_RGB(R, G, B));
@@ -157,7 +167,8 @@ class VaColor
          */
         //set the effect of text 
         // 根据传入的文本显示效果枚举值（effect）以及是否启用该效果的布尔值（isEnable），生成对应的 ANSI 转义序列字符串，返回该字符串指针。
-        // 如果 isEnable 为 true，则按照启用效果的 ANSI 转义序列格式，使用 snprintf 函数构造相应字符串；若为 false，则按照禁用效果的格式构造字符串，存储在 escapecommand 数组中供后续输出使用。
+        // 如果 isEnable 为 true，则按照启用效果的 ANSI 转义序列格式，
+        // 使用 snprintf 函数构造相应字符串；若为 false，则按照禁用效果的格式构造字符串，存储在 escapecommand 数组中供后续输出使用。
         inline static const char* _SetEffect(short effect,bool isEnable)
         {
             static char escapecommand[64];
@@ -185,12 +196,15 @@ class VaColor
 
         /*
          * Other functions 
-         * 以下是一些其他的实用颜色处理相关函数，包括颜色模式之间的转换、颜色混合以及颜色反转等功能，为更复杂的颜色操作需求提供支持，方便在不同颜色应用场景中进行灵活的颜色调整和处理。
+         * 以下是一些其他的实用颜色处理相关函数，包括颜色模式之间的转换、颜色混合以及颜色反转等功能，
+         * 为更复杂的颜色操作需求提供支持，方便在不同颜色应用场景中进行灵活的颜色调整和处理。
          */
 
 
-        // 将给定的 RGB 颜色值（r、g、b，范围通常是0 - 255）转换为对应的 ANSI 256 色模式下的颜色代码，不过作者不确定此函数在实际使用中的效果，后续会进行测试验证。
-        // 首先计算颜色的灰度值，然后根据颜色是否为灰度（即 r、g、b 相等）以及灰度值范围，按照特定的算法来确定对应的 ANSI 256 色代码，返回该代码值。
+        // 将给定的 RGB 颜色值（r、g、b，范围通常是0 - 255）转换为对应的 ANSI 256 色模式下的颜色代码,
+        // 不确定此函数在实际使用中的效果，后续会进行测试验证。
+        // 首先计算颜色的灰度值，然后根据颜色是否为灰度（即 r、g、b 相等）以及灰度值范围，
+        // 按照特定的算法来确定对应的 ANSI 256 色代码，返回该代码值。
         int RgbToAnsi256Color( int r,int g,int b )
         {
             int gray = 0.299 * r + 0.587 * g + 0.114 * b;
@@ -207,7 +221,7 @@ class VaColor
         }
 
         /*这个函数不是我写的，我也不知道这玩意能不能正常工作，我会测试它的*/
-        //将Ansi的256色转换成RGB颜色的三个分量
+        //将Ansi的256色转换成RGB颜色的三个分量( r , g , b ) 
         void Ansi256ColorToRGB(int ansi256Color, int& r, int& g, int& b)
         {
             if (ansi256Color >= 0 && ansi256Color <= 15) {
@@ -309,7 +323,8 @@ class VaColor
                 b = gray;
             }
         } 
-
+        
+        //混合两个Ansi256色，返回混合的结果
         int MixAnsi256Colors( int color1,int color2 )
         {
             int r1, g1, b1, r2, g2, b2;
@@ -348,6 +363,7 @@ class VaColor
             return RgbToAnsi256Color(r, g, b);
         }
 
+        //将Ansi256色色号反色处理，返回反色结果
         int AntiAnsi256Color(int colorcode)
         {
             int color1 =colorcode;
