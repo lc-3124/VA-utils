@@ -5,11 +5,24 @@
       "-c",
       "Userinfo.cpp",
       "-o",
-      "Userinfo",
+      "build/Userinfo",
       "-I../VaTui/"
     ],
     "directory": "/home/lc3124/clone/VA-untils/test",
     "file": "/home/lc3124/clone/VA-untils/test/Userinfo.cpp",
     "output": "/home/lc3124/clone/VA-untils/test/Userinfo.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/x86_64-linux-gnu-g++-12",
+      "-c",
+      "Colortest.cpp",
+      "-o",
+      "build/Colortest",
+      "-I../VaTui/"
+    ],
+    "directory": "/home/lc3124/clone/VA-untils/test",
+    "file": "/home/lc3124/clone/VA-untils/test/Colortest.cpp",
+    "output": "/home/lc3124/clone/VA-untils/test/Colortest.o"
   }
 ]

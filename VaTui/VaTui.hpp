@@ -20,13 +20,15 @@
 
 class VaTui 
 {
-    protected:
+    public:
         /*there are the submodels*/
         VaCursor *Cursor;
         VaColor *Color;
         VaTerm *Term;
         VaSystem *System;
         VaUtf *Utf;
+    
+    private:
         /*      submodules       */
         inline void submodel_init();
         inline void submodels_del();

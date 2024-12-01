@@ -7,7 +7,7 @@ IV = -I../VaTui/  #include the vatui
 
 
 #编译所有
-all : Userinfo 
+all : Userinfo Colortest 
 
 #删除编译过的，重新编译
 rebuild: clear all
@@ -16,5 +16,15 @@ clear :
 	rm -rf build
 	mkdir build
 
+#VaSystem模块的测试
 Userinfo: Userinfo.cpp 
 	${CC} Userinfo.cpp -o build/Userinfo ${IV}
+
+#Color模块的测试
+Colortest: Colortest.cpp
+	${CC} Colortest.cpp -o build/Colortest ${IV}
+
+
+#火车
+train: 
+	sl
