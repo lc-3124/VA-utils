@@ -546,12 +546,12 @@ class VaCursor
 
         // Show the cursor.
         // 返回用于显示光标的 ANSI 转义序列字符串，其固定为 "\033[?25h"，直接返回此字符串指针，供后续输出操作来实现显示光标功能，可在之前隐藏光标的场景结束后，重新显示光标以便正常交互操作。
-        inline static const char* _CurShow()
+        inline static const char* _CursorShow()
         {
             return "\033[?25h";
         }
-        // 通过调用 fastOutput 函数输出由 _CurShow 提供的 ANSI 转义序列，从而在终端上实际显示光标。
-        inline static void CurShow()
+        // 通过调用 fastOutput 函数输出由 _CursorShow 提供的 ANSI 转义序列，从而在终端上实际显示光标。
+        inline static void CursorShow()
         {
           fastOutput("\033[?25h");
         }
@@ -954,13 +954,15 @@ bool isGbkChar(const char* bytes, int len) {
 
 class VaTui 
 {
-    protected:
+    public:
         /*there are the submodels*/
         VaCursor *Cursor;
         VaColor *Color;
         VaTerm *Term;
         VaSystem *System;
         VaUtf *Utf;
+
+    private:
         /*      submodules       */
         inline void submodel_init();
         inline void submodels_del();
