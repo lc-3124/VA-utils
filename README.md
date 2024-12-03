@@ -15,7 +15,7 @@ untils for VAWK
 - [ ] 生物
 - [ ] 英语
 - [ ] 物理
-- [x] 把该死的周末作业写完
+- [ ] 把该死的作业写完
 
 ### 完善手册中的演示部分
 - [ ] VaSystem 部分
@@ -32,9 +32,7 @@ untils for VAWK
 - [ ] VaTerm Test
 - [ ] demo
 
-### 继续编写VAWk项目代码 
-- [ ] 画一个logo
-- [ ] VaWidget
+### 继续编写VAWk项目代码
 
 ## 其它
 #### 使用方法可以查看文档了解
