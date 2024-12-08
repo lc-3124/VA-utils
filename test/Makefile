@@ -16,13 +16,15 @@ clear :
 	rm -rf build
 	mkdir build
 
+######模块编译,默认以debug模式######
+
 #VaSystem模块的测试
 Userinfo: Userinfo.cpp 
-	${CC} Userinfo.cpp -o build/Userinfo ${IV}
+	${CC} Userinfo.cpp -o build/Userinfo -g ${IV}
 
 #Color模块的测试
 Colortest: Colortest.cpp
-	${CC} Colortest.cpp -o build/Colortest ${IV}
+	${CC} Colortest.cpp -o build/Colortest -g ${IV}
 
 
 #火车

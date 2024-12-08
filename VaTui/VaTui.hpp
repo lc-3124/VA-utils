@@ -22,40 +22,13 @@ class VaTui
 {
     public:
         /*there are the submodels*/
-        VaCursor *Cursor;
-        VaColor *Color;
-        VaTerm *Term;
-        VaSystem *System;
-        VaUtf *Utf;
+        VaCursor Cursor;
+        VaColor Color;
+        VaTerm Term;
+        VaSystem System;
+        VaUtf Utf;
     
     private:
-        /*      submodules       */
-        inline void submodel_init();
-        inline void submodels_del();
-
     public:
-        /*      init VaTui       */
-        VaTui(){submodel_init();};
-        /*      release VaTui    */
-        ~VaTui(){submodels_del();};
-
 
 };
-
-void VaTui::submodel_init()
-{
-    Cursor = new VaCursor;
-    Color = new VaColor;
-    Term = new VaTerm;
-    System = new VaSystem;
-    Utf = new VaUtf;
-}
-
-void VaTui::submodels_del()
-{
-    delete this->Cursor;
-    delete this->Color;
-    delete this->Term;
-    delete this->System;
-    delete this->Utf;
-}

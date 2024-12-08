@@ -100,6 +100,8 @@ void main_menu()
     while(1)
     {
         //draw
+        
+        Tui->Color->_SetColor256(koriFC,koriBC);
         Tui->Term->Clear();
         mvprint(0,0,"choose the module");
         for(int i=0;i<5;i++)
@@ -135,11 +137,40 @@ void main_menu()
 
 void output_4bitcolor()
 {
+    Tui->Color->_SetColor256(koriFC,koriBC);
+    Tui->Term->Clear();
+    mvprint(0,0,"Now , test the 4 bit color output!");
+#define COLOR4BITSTART 30
+#define COLOR4BITEND 37
+    for(int i=COLOR4BITSTART;i<=COLOR4BITEND;i++)
+    {
+    for(int j=COLOR4BITSTART+10;j<=COLOR4BITEND+10;j++)
+        {
+            Tui->Color->SetColor4bit(i,j);
+            Tui->Cursor->CursorMoveTo(i+2-30,1+(j-40)*2);
+            Tui->Term->fastOutput("##");
+        
+        }
+    }
     
+    mvprint(max_row,0,"Press any key to continue");
+    Tui->Term->getCharacter();
 }
+
 void output_256color()
 {
+    Tui->Color->_SetColor256(koriFC,koriBC);
+    Tui->Term->Clear();
+    mvprint(0,0,"Now , test the 256-color-output!");
+    mvprint(max_row,0,"Press any key to continue");
+    Tui->Term->getCharacter();
+    
+    mvprint(0,0,"1: 傻逼东西               ");
+    
 
+    mvprint(max_row,0,"Press any key to continue");
+    Tui->Term->getCharacter();
+    
 }
 void output_realcolor()
 {
