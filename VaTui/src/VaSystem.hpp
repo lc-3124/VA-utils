@@ -38,7 +38,7 @@ class VaSystem {
 
         //获取环境变量
         static std::string getRunningEnvironment(const char *index) {
-            const char *env = std::getenv("PATH");
+            const char *env = std::getenv(index);
             std::string result = "";
             if (env!= nullptr) {
                 result += env;
