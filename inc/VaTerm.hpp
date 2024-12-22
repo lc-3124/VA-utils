@@ -88,9 +88,9 @@ class VaTerm
         // 设置输出速度
         void setOutputSpeed(int speed);
         
-        //无阻塞获取字符，获取到的字符赋值给
-        int keyPressed(char &k);
-
+        //无阻塞获取字符，获取到的字符赋值给k,返回是否成功获取字符，失败返回-1,成功返回获取的字符
+        int getkeyPressed(char &k);
+       
         // 函数用于设置光标形状
         void setCursorShape(CursorShape shape);
 };
