@@ -13,7 +13,7 @@ untils for VAWK
 #### 如光标移动、光标外观、颜色输出、颜色混合、无阻塞输入、
 #### 无缓冲输出、封装终端设置、检测utf字节等等......
 
-## 使用样例(对于VAWK,请移步`github.com/lc-3124/VAWK`)
+## 使用样例(样例适用于VAWK,请移步`github.com/lc-3124/VAWK`)
 ```c++
 #include "VaTui"
 int main()
@@ -23,6 +23,9 @@ int main()
     return 0;
 }
 ```
+```bash
+g++ -o main main.cpp -lVAWK 
+```
 
 # 报告
 - 目前基本功能已经实现，但还没有清晰地将模块分离
@@ -30,4 +33,7 @@ int main()
 
 # 任务
 ## 下阶段任务
+- [ ] 完成各个模块源码和声明的分离
 - [ ] 好好复习，备战期末
+- [ ] 编写Windows的实现
+- [ ] 整合到VAWK中
