@@ -1,0 +1,15 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-Iinc",
+      "-c",
+      "-o",
+      "obj/VaTerm.o",
+      "src/Unix/VaTerm.cpp"
+    ],
+    "directory": "/home/lc3124/clone/VA-untils",
+    "file": "/home/lc3124/clone/VA-untils/src/Unix/VaTerm.cpp",
+    "output": "/home/lc3124/clone/VA-untils/obj/VaTerm.o"
+  }
+]
