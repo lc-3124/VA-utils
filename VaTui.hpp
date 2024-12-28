@@ -1,6 +1,6 @@
 #pragma once
 
-/* (C) Lc3124 2024
+/* (C) 2024 Lc3124
  * LICENSE (MIT)
  *
  * The functions implemented in this file are the basis for VAWK to perform synthesis,
@@ -12,11 +12,11 @@
  * I consider this file to be a refactoring of Va-unitls 
  */
 
-#include "src/VaCusor.hpp"
-#include "src/VaColor.hpp"
-#include "src/VaTerm.hpp"
-#include "src/VaSystem.hpp"
-#include "src/VaUtf.hpp"
+#include "VaCusor.hpp"
+#include "VaColor.hpp"
+#include "VaTerm.hpp"
+#include "VaSystem.hpp"
+#include "VaUtf.hpp"
 
 class VaTui 
 {

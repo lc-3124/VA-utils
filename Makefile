@@ -8,9 +8,9 @@
 
 #目录、环境变量
 CC=g++
-SCTD=-std=c++11
-OBJCFLAGS=-Iinc 
-TESTCFLAGS=-Iinc -Iobj 
+CSTD=-std=c++11
+OBJCFLAGS=-Iinc -fPIC -fvisibility=default
+TESTCFLAGS=-Iinc  -Iobj -I.
 
 #搜索库源代码，定义obj编译目录
 SRCPH = $(wildcard src/Unix/*.cpp)
@@ -31,7 +31,7 @@ obj/%.o: src/Unix/%.cpp
 #BUILD编译规则
 build/%: test/%.cpp
 	mkdir -p build 
-	$(CC) $(TESTCFLAGS) -c $< -o $@
+	$(CC) $(TESTCFLAGS) -o $@ $< $(OBJPH)
 
 #伪目标
 .PHONY:
