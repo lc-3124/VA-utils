@@ -2,9 +2,7 @@
   {
     "arguments": [
       "/usr/bin/g++",
-      "-Iinc",
-      "-fPIC",
-      "-fvisibility=default",
+      "-I.",
       "-c",
       "-o",
       "obj/VaColor.o",
@@ -13,85 +11,5 @@
     "directory": "/home/lc3124/clone/VA-untils",
     "file": "/home/lc3124/clone/VA-untils/src/Unix/VaColor.cpp",
     "output": "/home/lc3124/clone/VA-untils/obj/VaColor.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-Iinc",
-      "-fPIC",
-      "-fvisibility=default",
-      "-c",
-      "-o",
-      "obj/VaCusor.o",
-      "src/Unix/VaCusor.cpp"
-    ],
-    "directory": "/home/lc3124/clone/VA-untils",
-    "file": "/home/lc3124/clone/VA-untils/src/Unix/VaCusor.cpp",
-    "output": "/home/lc3124/clone/VA-untils/obj/VaCusor.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-Iinc",
-      "-fPIC",
-      "-fvisibility=default",
-      "-c",
-      "-o",
-      "obj/VaSystem.o",
-      "src/Unix/VaSystem.cpp"
-    ],
-    "directory": "/home/lc3124/clone/VA-untils",
-    "file": "/home/lc3124/clone/VA-untils/src/Unix/VaSystem.cpp",
-    "output": "/home/lc3124/clone/VA-untils/obj/VaSystem.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-Iinc",
-      "-fPIC",
-      "-fvisibility=default",
-      "-c",
-      "-o",
-      "obj/VaTerm.o",
-      "src/Unix/VaTerm.cpp"
-    ],
-    "directory": "/home/lc3124/clone/VA-untils",
-    "file": "/home/lc3124/clone/VA-untils/src/Unix/VaTerm.cpp",
-    "output": "/home/lc3124/clone/VA-untils/obj/VaTerm.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-Iinc",
-      "-fPIC",
-      "-fvisibility=default",
-      "-c",
-      "-o",
-      "obj/VaUtf.o",
-      "src/Unix/VaUtf.cpp"
-    ],
-    "directory": "/home/lc3124/clone/VA-untils",
-    "file": "/home/lc3124/clone/VA-untils/src/Unix/VaUtf.cpp",
-    "output": "/home/lc3124/clone/VA-untils/obj/VaUtf.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/g++",
-      "-c",
-      "-Iinc",
-      "-Iobj",
-      "-I.",
-      "obj/VaColor.o",
-      "obj/VaCusor.o",
-      "obj/VaSystem.o",
-      "obj/VaTerm.o",
-      "obj/VaUtf.o",
-      "-o",
-      "build/all",
-      "test/all.cpp"
-    ],
-    "directory": "/home/lc3124/clone/VA-untils",
-    "file": "/home/lc3124/clone/VA-untils/test/all.cpp",
-    "output": "/home/lc3124/clone/VA-untils/build/all"
   }
 ]

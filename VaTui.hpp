@@ -1,34 +1,188 @@
-#pragma once
-
-/* (C) 2024 Lc3124
- * LICENSE (MIT)
+/*
+ * (c) 2024 Lc3124
+ * License (MIT)
+ * 
+ * 这个文件是VaTui的声明
+ * VaTui包括5个子类，用于
+ * 颜色操作，光标操作，终端控制，系统信息获取，utf字节识别和处理
+ * 
+ * 可以看作是一个符号列表
  *
- * The functions implemented in this file are the basis for VAWK to perform synthesis,
- * plotting, invoking the system, obtaining system and environment information, 
- * and other underlying functions.
- *
- * This file contains the entire functionality of the other modules of the entire Va-untils,
- * but with a lot of modifications on top of that.
- * I consider this file to be a refactoring of Va-unitls 
  */
 
-#include "VaCusor.hpp"
-#include "VaColor.hpp"
-#include "VaTerm.hpp"
-#include "VaSystem.hpp"
-#include "VaUtf.hpp"
+/* PS(29 Dec 24):
+ * 我打算重新决定VaTui类的结构，于是现在现有的源代码都没法马上编译
+ * Makefile也要重写
+ * 于是我把win_src的分支删掉了
+ *
+ * 这个文件我将来会打上详细的英文注释
+ *
+ */
 
-class VaTui 
-{
-    public:
-        /*there are the submodels*/
-        VaCursor Cursor;
-        VaColor Color;
-        VaTerm Term;
-        VaSystem System;
-        VaUtf Utf;
-    
-    private:
-    public:
+#ifndef _VATUI_FILE_H_
+#define _VATUI_FILE_H_
 
+
+#include "VaTuiEnums.hpp"
+#include <string>
+
+
+class VaTui {
+    public:
+        class Color;
+        class Cursor;
+        class System;
+        class Term;
+        class Utf;
 };
+
+
+/*
+ * VaColor class
+ * VaColor 类是用于管理和操作终端文本颜色以及相关显示效果的核心类，
+ * 它提供了一系列静态方法来方便地设置文本的颜色、效果等，
+ * 并且包含了一些用于颜色转换、混合等实用功能的函数 
+ * 旨在为终端界面开发中涉及颜色处理的场景提供一站式的解决方案。
+ */
+class VaTui::Color{
+    private:
+        /*
+         * `fastOutput`是一个私有的成员，
+         * 用来实现快速输出文字到终端，
+         * 实际上是对`系统调用write()向标准输出写数据`的封装
+         */
+        static inline void fastOutput(const char *str); 
+    public:
+        /*
+         * 以下为颜色输出相关的函数
+         * 使用Ansi转义序列的颜色控制字符实现
+         * 对终端有一定要求，如果终端不支持这些Ansi序列
+         * 或者对转义字符的解释不符合预期效果
+         * 就会导致乱码等
+         *
+         * 以下方法按照返回值类型来分为2种
+         * 例如
+         *
+         * _SetColor256:
+         * 生成用于设置16位颜色模式下文本前景色和背景色的 ansi 转义序列字符串，
+         * 返回该字符串指针。
+         * 按照 ansi 转义序列中针对16位颜色模式的特定格式，结合传入的前景色和背景色参数，
+         * 使用 snprintf 函数构造相应字符串，
+         * 存储在 escapecommand 数组中供后续输出到终端来改变颜色显示。
+         *
+         * _SetColor256(int front, int background):
+         * 借助 fastoutput 函数输出 _setcolor256 生成的 ansi 转义序列，
+         * 实现将终端文本的前景色和背景色设置为指定的16位颜色模式颜色。
+         *
+         * 使用样例见手册页
+         */
+        static const char* _SetColor4bit(int front, int background);
+        static void SetColor4bit(int front, int background);
+        static const char* _SetColor256(int front, int background);
+        static void SetColor256(int front, int background);
+        static const char* _set_background_color_RGB(int R, int B, int G);
+        static void set_background_color_RGB(int R, int B, int G);
+        static const char* _set_front_color_RGB(int R, int B, int G);
+        static void set_front_color_RGB(int R, int B, int G);
+
+        /*
+         * 设置Ansi文字特效
+         * 
+         * SetEffect:
+         * 根据传入的文本显示效果枚举值（effect）以及是否启用该效果的布尔值（isEnable），
+         * 生成对应的 ANSI 转义序列字符串，返回该字符串指针。
+         * 如果 isEnable 为 true，则按照启用效果的 ANSI 转义序列格式，
+         * 使用 snprintf 函数构造相应字符串；
+         * 若为 false，则按照禁用效果的格式构造字符串，
+         * 存储在 escapecommand 数组中供后续输出使用。
+         *
+         * 同理，SetEffect用来立即应用_SetEffect的构造结果
+         */
+        static const char* _SetEffect(short effect, bool isEnable);
+        void SetEffect(short effect, bool isEnable);
+        static const char* _ColorEffectReset();
+
+
+        /*
+         * 其它
+         *
+         * 以下是一些其他的实用颜色处理相关函数，
+         * 包括颜色模式之间的转换、颜色混合以及颜色反转等功能，
+         * 为更复杂的颜色操作需求提供支持，
+         * 方便在不同颜色应用场景中进行灵活的颜色调整和处理。
+         *
+         * PS:(Lc3124)
+         * 说实话，我也不清楚什么时候才会真正用到颜色混合相关的函数
+         * 但其他的，比如颜色格式的转换完全可以用来兼容不同颜色支持的终端
+         * 我相信它们有不错的效果
+         */
+
+        //这些函数名称和签名使其功能显而易见，所以不过多注释
+        int RgbToAnsi256Color(int r, int g, int b);
+        void Ansi256ColorToRGB(int ansi256Color, int& r, int& g, int& b);
+        int MixAnsi256Colors(int color1, int color2);
+        int AntiAnsi256Color(int colorcode);
+        int Ansi16ColorToAnsi256(int ansi16Color);
+        int Ansi256ColorToAnsi16(int ansi256Color);
+};
+
+class VaTui::Cursor {
+    static const char* _CursorMoveTo(int h, int w);
+    static void CursorMoveTo(int h, int w);
+    static const char* _CursorMove(int dr, int ds);
+    static void CursorMove(int dr, int ds);
+    static const char* _CursorReset();
+    static void CursorReset();
+    static const char* _CursorHide();
+    static void CursorHide();
+    static const char* _CursorShow();
+    static void CursorShow();
+};
+
+class VaTui::System {
+    static std::string getUserName();
+    static std::string getCurrentTime();
+    static std::string getRunningEnvironment(const char* index);
+    static std::string getDeviceName();
+    static std::string getHostName();
+    static std::string getRunningDirectory();
+};
+
+class VaTui::Term {
+    static const char* _Clear();
+    static void Clear();
+    static const char* _ClearLine();
+    static void ClearLine();
+    void getTerminalAttributes();
+    void setTerminalAttributes(const struct termios &newAttrs);
+    void enableEcho();
+    void disableEcho();
+    void enableConsoleBuffering();
+    void disableConsoleBuffering();
+    void getTerminalSize(int &rows, int &cols);
+    void setCursorPosition(int row, int col);
+    void saveCursorPosition();
+    void restoreCursorPosition();
+    static void fastOutput(const char* str);
+    char nonBufferedGetKey();
+    const char* getTerminalType();
+    void setLineBuffering(bool enable);
+    char getCharacter();
+    bool isTerminalFeatureSupported(const char* feature);
+    void setCharacterDelay(int milliseconds);
+    int getInputSpeed();
+    void setInputSpeed(int speed);
+    void setOutputSpeed(int speed);
+    int getkeyPressed(char &k);
+    void setCursorShape(CursorShape shape);
+};
+
+class VaTui::Utf {
+    size_t getUtf8CharWidth(const char* s);
+    bool isAscii(char c);
+    bool isUtf8StartByte(char c);
+    bool isUtf8Char(const char* bytes, int len);
+    bool isGbkChar(const char* bytes, int len);
+};
+
+#endif

@@ -9,8 +9,8 @@
 #目录、环境变量
 CC=g++
 CSTD=-std=c++11
-OBJCFLAGS=-Iinc -fPIC -fvisibility=default
-TESTCFLAGS=-Iinc  -Iobj -I.
+OBJCFLAGS= -I.
+TESTCFLAGS=  -Iobj -I.
 
 #搜索库源代码，定义obj编译目录
 SRCPH = $(wildcard src/Unix/*.cpp)
