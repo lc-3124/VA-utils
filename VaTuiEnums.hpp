@@ -1,3 +1,15 @@
+#ifndef _VATUIENUMS_HPP_
+
+#define _VATUIENUMS_HPP_
+
+// VaCursor类中光标移动的枚举常量
+enum CursorMovement{
+    CUR_LEFT  = 0,
+    CUR_RIGHT = 1,
+    CUR_UP    = 2,
+    CUR_DOWN  = 3,
+};
+
 // 用于定义光标形状的枚举
 enum CursorShape {
     CURSOR_BLOCK = 0,
@@ -59,3 +71,5 @@ enum class AnsiEffect {
     CONCEAL = 8,
     DELETE = 9
 };
+
+#endif

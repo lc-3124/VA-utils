@@ -11,5 +11,44 @@
     "directory": "/home/lc3124/clone/VA-untils",
     "file": "/home/lc3124/clone/VA-untils/src/Unix/VaColor.cpp",
     "output": "/home/lc3124/clone/VA-untils/obj/VaColor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-c",
+      "-o",
+      "obj/VaCusor.o",
+      "src/Unix/VaCusor.cpp"
+    ],
+    "directory": "/home/lc3124/clone/VA-untils",
+    "file": "/home/lc3124/clone/VA-untils/src/Unix/VaCusor.cpp",
+    "output": "/home/lc3124/clone/VA-untils/obj/VaCusor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-c",
+      "-o",
+      "obj/VaSystem.o",
+      "src/Unix/VaSystem.cpp"
+    ],
+    "directory": "/home/lc3124/clone/VA-untils",
+    "file": "/home/lc3124/clone/VA-untils/src/Unix/VaSystem.cpp",
+    "output": "/home/lc3124/clone/VA-untils/obj/VaSystem.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-c",
+      "-o",
+      "obj/VaTerm.o",
+      "src/Unix/VaTerm.cpp"
+    ],
+    "directory": "/home/lc3124/clone/VA-untils",
+    "file": "/home/lc3124/clone/VA-untils/src/Unix/VaTerm.cpp",
+    "output": "/home/lc3124/clone/VA-untils/obj/VaTerm.o"
   }
 ]

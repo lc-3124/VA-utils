@@ -10,7 +10,8 @@
  *
  */
 
-/* PS(29 Dec 24):
+/* 
+ * PS(29 Dec 24):
  * 我打算重新决定VaTui类的结构，于是现在现有的源代码都没法马上编译
  * Makefile也要重写
  * 于是我把win_src的分支删掉了
@@ -124,19 +125,53 @@ class VaTui::Color{
         int AntiAnsi256Color(int colorcode);
         int Ansi16ColorToAnsi256(int ansi16Color);
         int Ansi256ColorToAnsi16(int ansi256Color);
+            //以下几个还没有实现 (Lc3124 3418746552@qq.com)
+            //4bit颜色是有前景和背景之分的，这里根据isFrontOrBack
+        int Ansi256ColorToAnsi4bit(int ansi256Color, bool isFrontOrBack);
+        //因为16色和256色兼容，所以只做4到16色转换
+        //但是4bit颜色是有前景和背景之分的，这里转换后就没有这样的区分了
+        int Ansi4bitColorToAnsi16(int ansi4bitColor);
 };
 
+/*
+ * Functions related to cursor actions.
+ * VaCursor 类封装了一系列与终端光标操作相关的函数，通过生成和输出 ANSI 转义序列来控制终端光标的位置、显示状态等，为在终端应用中实现自定义的光标行为提供了便捷的方式。
+ */
 class VaTui::Cursor {
-    static const char* _CursorMoveTo(int h, int w);
-    static void CursorMoveTo(int h, int w);
-    static const char* _CursorMove(int dr, int ds);
-    static void CursorMove(int dr, int ds);
-    static const char* _CursorReset();
-    static void CursorReset();
-    static const char* _CursorHide();
-    static void CursorHide();
-    static const char* _CursorShow();
-    static void CursorShow();
+    private:
+        //封装write,为特效字符串提供输出
+        static inline void fastOutput(const char *str); 
+    public:
+
+        /*
+         * Functions related to cursor actions.
+         * 以下是与光标操作相关的一系列公共函数，提供了不同类型的光标操作功能，
+         * 例如移动到指定位置、按方向移动以及控制光标显示隐藏等，
+         * 方便开发者根据具体需求灵活操控终端光标。
+         */
+
+
+        /*
+         * 以下程序用来控制光标移动
+         * 通过构建Ansi转义序列的相关字符和参数来使终端控制光标移动
+         * 但是需要终端的支持
+         */
+        static const char* _CursorMoveTo(int h, int w);
+        static void CursorMoveTo(int h, int w);
+
+        //这个CursorMove方法用来移动光标，dr传入枚举常量参数,ds传入移动方向
+        static const char* _CursorMove(int dr, int ds);
+
+        static void CursorMove(int dr, int ds);
+        static const char* _CursorReset();
+
+        // 返回用于将光标重置到默认位置（通常是终端屏幕左上角，即第一行第一列）的 ANSI 转义序列字符串。
+        static void CursorReset();
+
+        static const char* _CursorHide();
+        static void CursorHide();
+        static const char* _CursorShow();
+        static void CursorShow();
 };
 
 class VaTui::System {
