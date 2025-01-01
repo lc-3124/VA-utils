@@ -15,11 +15,10 @@ untils for VAWK
 
 ## 使用样例(样例适用于VAWK,请移步`github.com/lc-3124/VAWK`)
 ```c++
-#include "VaTui"
+#include "VaTui.hpp"
 int main()
 {
-    VaTui Tui;
-    Tui.Term.fastOutput("Hello world!");    //调用Term子模块下的fastOutput来无缓冲输出
+    VaTui::Term::fastOutput("Hello world!");    //调用Term子模块下的fastOutput来无缓冲输出
     return 0;
 }
 ```
@@ -32,6 +31,7 @@ g++ -o main main.cpp -lVAWK
 - 正在优化目录结构
 
 # 任务
+- [ ] 打算加入VaColor模块生成256色号的程序，通过RGB三个分量(0~5)来指定颜色
 
 ## 报告:
 1. 完成了VaTui模块的重新划分
