@@ -83,31 +83,26 @@ void VaTui::Cursor::CursorReset()
     fastOutput("\033[H");
 }
 
-// Hide the cursor.
-// 返回用于隐藏光标的 ANSI 转义序列字符串，该字符串固定为 "\033[?25l"，直接返回此字符串指针，供后续输出操作来实现隐藏光标功能，常用于一些不需要光标显示干扰的场景，比如全屏展示内容时。
-inline static const char* _CursorHide()
+const char* VaTui::Cursor::_CursorHide()
 {
     return "\033[?25l";
 }
 // 通过调用 fastOutput 函数输出由 _CursorHide 提供的 ANSI 转义序列，从而在终端上实际隐藏光标。
-inline static void CursorHide()
+void VaTui::Cursor::CursorHide()
 {
     fastOutput("\033[?25l");
 }
 
 // Show the cursor.
 // 返回用于显示光标的 ANSI 转义序列字符串，其固定为 "\033[?25h"，直接返回此字符串指针，供后续输出操作来实现显示光标功能，可在之前隐藏光标的场景结束后，重新显示光标以便正常交互操作。
-inline static const char* _CursorShow()
+const char* VaTui::Cursor::_CursorShow()
 {
     return "\033[?25h";
 }
 // 通过调用 fastOutput 函数输出由 _CursorShow 提供的 ANSI 转义序列，从而在终端上实际显示光标。
-inline static void CursorShow()
+void VaTui::Cursor::CursorShow()
 {
     fastOutput("\033[?25h");
 }
-
-
-};
 
 #endif

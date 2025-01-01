@@ -167,53 +167,101 @@ class VaTui::Cursor {
 
         // 返回用于将光标重置到默认位置（通常是终端屏幕左上角，即第一行第一列）的 ANSI 转义序列字符串。
         static void CursorReset();
-
         static const char* _CursorHide();
+
         static void CursorHide();
         static const char* _CursorShow();
         static void CursorShow();
 };
 
-class VaTui::System {
+/*
+ * 这个某块用来获取各种系统信息
+ * 比如用户名，运行环境，所在目录等等
+ */
+class VaTui::System { 
+    public:
     static std::string getUserName();
     static std::string getCurrentTime();
+
+    //这个需要说明的是此函数用于获取环境变量，index为变量名，返回变量值
     static std::string getRunningEnvironment(const char* index);
+
     static std::string getDeviceName();
     static std::string getHostName();
     static std::string getRunningDirectory();
 };
 
+/*
+ * 这个模块用于控制终端来实现输入输出和一些关键的操作
+ * 包括了检测终端对某个功能的支持情况、非阻塞获取键盘输入、
+ * 屏幕清空、光标位移、启用或禁用回显等等
+ * 
+ * 在linux下的实现是对terminfo,termios等库的封装
+ */
 class VaTui::Term {
+
+    //这个函数会获取一次终端设置,保存在一个静态变量中 
+    static void getTerminalAttributes();
+    static void setTerminalAttributes(const struct termios &newAttrs);
+    
+    public:
+    //保存(刷新)终端设置
+    static void SaveTerm();
+    //恢复终端设置
+    static void RestoreTerm();
+    //生成用来清空屏幕的Ansi字符串
     static const char* _Clear();
+    //上一个函数的直接输出版本
     static void Clear();
+    //清除一行 
     static const char* _ClearLine();
     static void ClearLine();
-    void getTerminalAttributes();
-    void setTerminalAttributes(const struct termios &newAttrs);
-    void enableEcho();
-    void disableEcho();
-    void enableConsoleBuffering();
-    void disableConsoleBuffering();
-    void getTerminalSize(int &rows, int &cols);
-    void setCursorPosition(int row, int col);
-    void saveCursorPosition();
-    void restoreCursorPosition();
+    //启用回显
+    static void enableEcho();
+    static void disableEcho();
+    //启用控制台缓冲
+    static void enableConsoleBuffering();
+    static void disableConsoleBuffering();
+    //获取终端大小
+    static void getTerminalSize(int &rows, int &cols);
+    //设置光标位置
+    static void setCursorPosition(int row, int col);
+    static void saveCursorPosition();
+    static void restoreCursorPosition();
+    //无缓冲输出
     static void fastOutput(const char* str);
-    char nonBufferedGetKey();
-    const char* getTerminalType();
+    //类似getch()
+    static char nonBufferedGetKey();
+    //返回终端类型
+    static const char* getTerminalType();
+    //启、禁用行缓冲
     void setLineBuffering(bool enable);
-    char getCharacter();
-    bool isTerminalFeatureSupported(const char* feature);
+    //类似getch()，但没有终端回显，副作用是执行完后会把回显打开
+    static char getCharacter();
+    //检查feature是否支持
+    static bool isTerminalFeatureSupported(const char* feature);
+
+    //关于什么速度设置，我不清楚，按照《Linux/Unix编程手册》实现的
     void setCharacterDelay(int milliseconds);
-    int getInputSpeed();
-    void setInputSpeed(int speed);
-    void setOutputSpeed(int speed);
-    int getkeyPressed(char &k);
-    void setCursorShape(CursorShape shape);
+    static int getInputSpeed();
+    static void setInputSpeed(int speed);
+    static void setOutputSpeed(int speed);
+    //无阻塞获取按键，失败就返回-1，否则不返回固定的值
+    static int getkeyPressed(char &k);
+    //根据传入的枚举常量参数来设置光标形状
+    static void setCursorShape(CursorShape shape);
 };
 
+ /*
+  * 这个模块用来识别Utf字节，
+  * 当然还有一些其他的功能，也会在之后加入新的功能
+  */
 class VaTui::Utf {
+    public:
+    //检测一段含有UTF字符的字符串的第一个有效字符的内存宽度
+    //详见手册
     size_t getUtf8CharWidth(const char* s);
+     
     bool isAscii(char c);
     bool isUtf8StartByte(char c);
     bool isUtf8Char(const char* bytes, int len);

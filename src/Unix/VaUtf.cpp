@@ -1,18 +1,18 @@
-#pragma once
 /*
- * (C) Lc3124 
- * release in 2024 
- * LICENSE (MIT)
- * 这个文件包含一个类，用来识别Utf字节，当然还有一些其他的功能，也会在之后加入新的功能
+ * (c) 2025 Lc3124
+ * License (MIT)
+ * VaTui::Utf的实现
  */
 
+#ifndef _VAUTF_CPP_
+#define _VAUTF_CPP_
+
+#include "VaTui.hpp"
 #include <locale>
 
-class VaUtf
-{
 
 //get the width of a UTF character 
-size_t getUtf8CharWidth(const char* s) {
+size_t VaTui::Utf::getUtf8CharWidth(const char* s) {
     if (!s ||!*s) return 0;
     unsigned char c = static_cast<unsigned char>(*s);
     if (c < 0x80) return 1;
@@ -24,19 +24,19 @@ size_t getUtf8CharWidth(const char* s) {
 }
 
 // recognize a ASCII character 
-bool isAscii(char c) {
+bool VaTui::Utf::isAscii(char c) {
     return (c & 0x80) == 0;
 
 }
 
 // 判断是否为 UTF-8 多字节序列的开头字节
-bool isUtf8StartByte(char c) {
+bool VaTui::Utf::isUtf8StartByte(char c) {
     return (c & 0xC0)!= 0x80 && (c & 0xF0)!= 0xF8 && (c & 0xFE)!= 0xFC;
 
 }
 
 // 判断是否为 UTF-8 编码字符
-bool isUtf8Char(const char* bytes, int len) {
+bool VaTui::Utf::isUtf8Char(const char* bytes, int len) {
     if (len <= 0) return false;
     char firstByte = bytes[0];
     if (isAscii(firstByte)) return true;
@@ -54,7 +54,7 @@ bool isUtf8Char(const char* bytes, int len) {
 }
 
 // 判断是否为 GBK 编码字符（简单判断，假设连续两个字节都在 GBK 编码范围内）
-bool isGbkChar(const char* bytes, int len) {
+bool VaTui::Utf::isGbkChar(const char* bytes, int len) {
     if (len!= 2) return false;
     unsigned char firstByte = static_cast<unsigned char>(bytes[0]);
     unsigned char secondByte = static_cast<unsigned char>(bytes[1]);
@@ -63,4 +63,4 @@ bool isGbkChar(const char* bytes, int len) {
 }
 
 
-};
+#endif
