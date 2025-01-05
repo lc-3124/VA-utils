@@ -60,7 +60,7 @@ enum color16 {
 };
 
 // 定义各种文本显示效果的枚举类型
-enum class AnsiEffect {
+enum AnsiEffect {
     BOLD = 1,
     DIM = 2,
     ITALIC = 3,

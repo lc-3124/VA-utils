@@ -1,131 +1,172 @@
-/*
- * (c) 2024 Lc3124
- * License (MIT)
- * VaTerm在linux下的实现
- */
-
-#ifndef _VATERM_CPP_
-#define _VATERM_CPP_
-
 #include "VaTui.hpp"
 
 // std
 #include <cstdio>
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 // sys
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
 
-
+// 全局变量，保存原始终端属性和当前终端属性
 termios originalAttrs;
 termios currentAttrs;
 
+// 辅助函数，用于安全地设置终端属性，添加异常处理机制
+void VaTui::Term::setTerminalAttrsSafely(const termios &newAttrs) {
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &newAttrs)!= 0) {
+        throw std::runtime_error("Failed to set terminal attributes.");
+    }
+    currentAttrs = newAttrs;
+}
+
+// 辅助函数，用于安全地获取终端属性，添加异常处理机制
+void VaTui::Term::getTerminalAttrsSafely() {
+    if (tcgetattr(STDIN_FILENO, &currentAttrs)!= 0) {
+        throw std::runtime_error("Failed to get terminal attributes.");
+    }
+}
+
+// 保存终端原始设置
 void VaTui::Term::SaveTerm() {
-    tcgetattr(STDIN_FILENO, &originalAttrs);
-    currentAttrs = originalAttrs;
+    getTerminalAttrsSafely();
+    originalAttrs = currentAttrs;
 }
 
-//释放时会恢复终端设置
+// 恢复终端原始设置
 void VaTui::Term::RestoreTerm() {
-    tcsetattr(STDIN_FILENO, TCSANOW, &originalAttrs);
+    setTerminalAttrsSafely(originalAttrs);
+   // system("reset");
 }
 
-
-// Clear the entire screen.
-const char* VaTui::Term:: _Clear()
-{
+// 清空整个屏幕
+const char* VaTui::Term::_Clear() {
     return "\033[2J";
 }
-void VaTui::Term::Clear()
-{
+void VaTui::Term::Clear() {
     fastOutput("\033[2J");
 }
 
-// Clear the area from the cursor's position to the end of the line.
-const char* VaTui::Term::_ClearLine()
-{
+// 清空从光标位置到行尾的区域
+const char* VaTui::Term::_ClearLine() {
     return "\033[K";
 }
-void VaTui::Term::ClearLine()
-{
+void VaTui::Term::ClearLine() {
     fastOutput("\033[K");
 }
+
+// 获取终端属性
 void VaTui::Term::getTerminalAttributes() {
-    tcgetattr(STDIN_FILENO, &currentAttrs);
+    getTerminalAttrsSafely();
 }
 
+// 设置终端属性
 void VaTui::Term::setTerminalAttributes(const termios &newAttrs) {
-    currentAttrs = newAttrs;
-    tcsetattr(STDIN_FILENO, TCSANOW, &currentAttrs);
+    setTerminalAttrsSafely(newAttrs);
 }
 
+// 启用终端回显
 void VaTui::Term::enableEcho() {
-    currentAttrs.c_lflag |= ECHO;
-    tcsetattr(STDIN_FILENO, TCSANOW, &currentAttrs);
+    termios newAttrs = currentAttrs;
+    newAttrs.c_lflag |= ECHO;
+    setTerminalAttrsSafely(newAttrs);
 }
 
+// 禁用终端回显
 void VaTui::Term::disableEcho() {
-    currentAttrs.c_lflag &= ~ECHO;
-    tcsetattr(STDIN_FILENO, TCSANOW, &currentAttrs);
+    termios newAttrs = currentAttrs;
+    newAttrs.c_lflag &= ~ECHO;
+    setTerminalAttrsSafely(newAttrs);
 }
 
+// 启用控制台缓冲
 void VaTui::Term::enableConsoleBuffering() {
     int flags = fcntl(STDIN_FILENO, F_GETFL);
     fcntl(STDIN_FILENO, F_SETFL, flags & ~O_SYNC);
 }
 
+// 禁用控制台缓冲
 void VaTui::Term::disableConsoleBuffering() {
     int flags = fcntl(STDIN_FILENO, F_GETFL);
     fcntl(STDIN_FILENO, F_SETFL, flags | O_SYNC);
 }
 
+// 获取终端大小
 void VaTui::Term::getTerminalSize(int &rows, int &cols) {
     struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    rows = w.ws_row;
-    cols = w.ws_col;
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == 0) {
+        rows = w.ws_row;
+        cols = w.ws_col;
+    } else {
+        throw std::runtime_error("Failed to get terminal size.");
+    }
 }
 
+// 设置光标位置
 void VaTui::Term::setCursorPosition(int row, int col) {
     std::cout << "\033[" << row << ";" << col << "H";
+    std::cout.flush();  // 手动刷新输出缓冲区，确保光标位置及时更新显示
 }
 
-void VaTui::Term::saveCursorPosition() { std::cout << "\033[s"; }
+// 保存光标位置
+void VaTui::Term::saveCursorPosition() {
+    std::cout << "\033[s";
+    std::cout.flush();  // 刷新输出缓冲区，保证保存操作生效
+}
 
-void VaTui::Term::restoreCursorPosition() { std::cout << "\033[u"; }
+// 恢复光标位置
+void VaTui::Term::restoreCursorPosition() {
+    std::cout << "\033[u";
+    std::cout.flush();  // 刷新输出缓冲区，保证恢复操作生效
+}
 
+// 快速输出内容到终端
 void VaTui::Term::fastOutput(const char *str) {
     write(STDOUT_FILENO, str, strlen(str));
 }
 
-char VaTui::Term:: nonBufferedGetKey() {
+// 非缓冲获取按键，改进以避免影响标准输出刷新
+char VaTui::Term::nonBufferedGetKey() {
     struct termios oldt, newt;
     char c;
-    tcgetattr(STDIN_FILENO, &oldt);
+    getTerminalAttrsSafely();
+    oldt = currentAttrs;
     newt = oldt;
     newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    read(STDIN_FILENO, &c, 1);
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    return c;
-}
-
-const char* VaTui::Term::getTerminalType() { return std::getenv("TERM"); }
-
-
-void VaTui::Term::setLineBuffering(bool enable) {
-    if (enable) {
-        currentAttrs.c_lflag |= ICANON;
-    } else {
-        currentAttrs.c_lflag &= ~ICANON;
+    // 确保输出缓冲区能正常刷新
+    newt.c_oflag |= ONLCR;
+    setTerminalAttrsSafely(newt);
+    std::cout.flush();  // 手动刷新标准输出缓冲区
+    if (read(STDIN_FILENO, &c, 1) == 1) {
+        setTerminalAttrsSafely(oldt);
+        std::cout.flush();  // 再次刷新，确保后续输出正常
+        return c;
     }
-    tcsetattr(STDIN_FILENO, TCSANOW, &currentAttrs);
+    setTerminalAttrsSafely(oldt);
+    std::cout.flush();  // 恢复属性后再次刷新
+    return 0;  // 如果读取失败，返回空字符
 }
 
-//禁止回显，然后阻塞，返回获取到的字符，类似于getch()
+// 获取终端类型
+const char* VaTui::Term::getTerminalType() {
+    return std::getenv("TERM");
+}
+
+// 设置行缓冲模式
+void VaTui::Term::setLineBuffering(bool enable) {
+    termios newAttrs = currentAttrs;
+    if (enable) {
+        newAttrs.c_lflag |= ICANON;
+    } else {
+        newAttrs.c_lflag &= ~ICANON;
+    }
+    setTerminalAttrsSafely(newAttrs);
+}
+
+// 获取一个字符，类似getch，改进以确保回显正确处理
 char VaTui::Term::getCharacter() {
     disableEcho();
     char c = nonBufferedGetKey();
@@ -133,17 +174,13 @@ char VaTui::Term::getCharacter() {
     return c;
 }
 
-//判断终端是否支持某一功能 
+// 判断终端是否支持某一功能
 bool VaTui::Term::isTerminalFeatureSupported(const char *feature) {
     const char *termType = getTerminalType();
     if (termType == nullptr) {
         return false;
-
     }
-    if (strstr(termType, feature)!= nullptr) {
-        return true;
-    }
-    return false;
+    return (strstr(termType, feature)!= nullptr);
 }
 
 // 设置字符输入延迟
@@ -151,17 +188,13 @@ void VaTui::Term::setCharacterDelay(int milliseconds) {
     termios newAttrs = currentAttrs;
     newAttrs.c_cc[VMIN] = 0;
     newAttrs.c_cc[VTIME] = milliseconds / 100;
-    setTerminalAttributes(newAttrs);
-
+    setTerminalAttrsSafely(newAttrs);
 }
 
 // 获取输入速度
 int VaTui::Term::getInputSpeed() {
-    speed_t speed;
-    tcgetattr(STDIN_FILENO, &currentAttrs);
-    speed = cfgetospeed(&currentAttrs);
-    return static_cast<int>(speed);
-
+    getTerminalAttrsSafely();
+    return cfgetospeed(&currentAttrs);
 }
 
 // 设置输入速度
@@ -169,48 +202,46 @@ void VaTui::Term::setInputSpeed(int speed) {
     termios newAttrs = currentAttrs;
     cfsetospeed(&newAttrs, static_cast<speed_t>(speed));
     cfsetispeed(&newAttrs, static_cast<speed_t>(speed));
-    setTerminalAttributes(newAttrs);
-
+    setTerminalAttrsSafely(newAttrs);
 }
 
 // 设置输出速度
 void VaTui::Term::setOutputSpeed(int speed) {
     termios newAttrs = currentAttrs;
     cfsetospeed(&newAttrs, static_cast<speed_t>(speed));
-    setTerminalAttributes(newAttrs);
-
+    setTerminalAttrsSafely(newAttrs);
 }
 
+// 检测是否有按键按下
 int VaTui::Term::getkeyPressed(char &k) {
     struct termios oldt, newt;
     int oldf;
-    tcgetattr(STDIN_FILENO, &oldt);
+    getTerminalAttrsSafely();
+    oldt = currentAttrs;
     newt = oldt;
     newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
     oldf = fcntl(STDIN_FILENO, F_GETFL);
     fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+    setTerminalAttrsSafely(newt);
 
     char c;
     int res = read(STDIN_FILENO, &c, 1);
     if (res > 0) {
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+        k = c;
+        setTerminalAttrsSafely(oldt);
         fcntl(STDIN_FILENO, F_SETFL, oldf);
-        k=c;
         return 1;
     } else {
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+        setTerminalAttrsSafely(oldt);
         fcntl(STDIN_FILENO, F_SETFL, oldf);
-        k=static_cast<char>(-1);
+        k = static_cast<char>(-1);
         return -1;
     }
 }
 
-// 函数用于设置光标形状
+// 设置光标形状
 void VaTui::Term::setCursorShape(CursorShape shape) {
     termios newAttrs = currentAttrs;
-
-    // 根据传入的光标形状设置相应的c_cflag值
     switch (shape) {
         case CURSOR_BLOCK:
             newAttrs.c_cflag &= ~(ECHOCTL);
@@ -222,7 +253,5 @@ void VaTui::Term::setCursorShape(CursorShape shape) {
             newAttrs.c_cflag |= ECHOCTL;
             break;
     }
-    // 设置新的终端属性
-    setTerminalAttributes(newAttrs);
+    setTerminalAttrsSafely(newAttrs);
 }
-#endif

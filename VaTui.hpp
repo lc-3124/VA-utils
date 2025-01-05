@@ -99,7 +99,7 @@ class VaTui::Color{
          * 同理，SetEffect用来立即应用_SetEffect的构造结果
          */
         static const char* _SetEffect(short effect, bool isEnable);
-        void SetEffect(short effect, bool isEnable);
+        static void SetEffect(short effect, bool isEnable);
         static const char* _ColorEffectReset();
 
 
@@ -118,18 +118,18 @@ class VaTui::Color{
          */
 
         //这些函数名称和签名使其功能显而易见，所以不过多注释
-        int RgbToAnsi256Color(int r, int g, int b);
-        void Ansi256ColorToRGB(int ansi256Color, int& r, int& g, int& b);
-        int MixAnsi256Colors(int color1, int color2);
-        int AntiAnsi256Color(int colorcode);
-        int Ansi16ColorToAnsi256(int ansi16Color);
-        int Ansi256ColorToAnsi16(int ansi256Color);
-            //以下几个还没有实现 (Lc3124 3418746552@qq.com)
-            //4bit颜色是有前景和背景之分的，这里根据isFrontOrBack
-        int Ansi256ColorToAnsi4bit(int ansi256Color, bool isFrontOrBack);
+        static int RgbToAnsi256Color(int r, int g, int b);
+        static void Ansi256ColorToRGB(int ansi256Color, int& r, int& g, int& b);
+        static int MixAnsi256Colors(int color1, int color2);
+        static int AntiAnsi256Color(int colorcode);
+        static int Ansi16ColorToAnsi256(int ansi16Color);
+        static int Ansi256ColorToAnsi16(int ansi256Color);
+        //以下几个还没有实现 (Lc3124 3418746552@qq.com)
+        //4bit颜色是有前景和背景之分的，这里根据isFrontOrBack
+        static int Ansi256ColorToAnsi4bit(int ansi256Color, bool isFrontOrBack);
         //因为16色和256色兼容，所以只做4到16色转换
         //但是4bit颜色是有前景和背景之分的，这里转换后就没有这样的区分了
-        int Ansi4bitColorToAnsi16(int ansi4bitColor);
+        static int Ansi4bitColorToAnsi16(int ansi4bitColor);
 };
 
 /*
@@ -179,15 +179,15 @@ class VaTui::Cursor {
  */
 class VaTui::System { 
     public:
-    static std::string getUserName();
-    static std::string getCurrentTime();
+        static std::string getUserName();
+        static std::string getCurrentTime();
 
-    //这个需要说明的是此函数用于获取环境变量，index为变量名，返回变量值
-    static std::string getRunningEnvironment(const char* index);
+        //这个需要说明的是此函数用于获取环境变量，index为变量名，返回变量值
+        static std::string getRunningEnvironment(const char* index);
 
-    static std::string getDeviceName();
-    static std::string getHostName();
-    static std::string getRunningDirectory();
+        static std::string getDeviceName();
+        static std::string getHostName();
+        static std::string getRunningDirectory();
 };
 
 /*
@@ -199,11 +199,13 @@ class VaTui::System {
  */
 class VaTui::Term {
 
+    public:
     //这个函数会获取一次终端设置,保存在一个静态变量中 
     static void getTerminalAttributes();
     static void setTerminalAttributes(const struct termios &newAttrs);
-    
-    public:
+    static void setTerminalAttrsSafely(const termios &newAttrs);
+    static void getTerminalAttrsSafely();
+
     //保存(刷新)终端设置
     static void SaveTerm();
     //恢复终端设置
@@ -249,22 +251,27 @@ class VaTui::Term {
     static int getkeyPressed(char &k);
     //根据传入的枚举常量参数来设置光标形状
     static void setCursorShape(CursorShape shape);
+    //所有更改终端和fastOutput都有可能影响到标准输出,
+    //如果你不是在开发一个完全的TUI程序
+    //请使用这个函数刷新标准输出
+    static void FlushStdOut(); 
+
 };
 
- /*
-  * 这个模块用来识别Utf字节，
-  * 当然还有一些其他的功能，也会在之后加入新的功能
-  */
+/*
+ * 这个模块用来识别Utf字节，
+ * 当然还有一些其他的功能，也会在之后加入新的功能
+ */
 class VaTui::Utf {
     public:
-    //检测一段含有UTF字符的字符串的第一个有效字符的内存宽度
-    //详见手册
-    size_t getUtf8CharWidth(const char* s);
-     
-    bool isAscii(char c);
-    bool isUtf8StartByte(char c);
-    bool isUtf8Char(const char* bytes, int len);
-    bool isGbkChar(const char* bytes, int len);
+        //检测一段含有UTF字符的字符串的第一个有效字符的内存宽度
+        //详见手册
+        size_t getUtf8CharWidth(const char* s);
+
+        bool isAscii(char c);
+        bool isUtf8StartByte(char c);
+        bool isUtf8Char(const char* bytes, int len);
+        bool isGbkChar(const char* bytes, int len);
 };
 
 #endif
