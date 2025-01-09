@@ -10,7 +10,7 @@
 CC=g++
 CSTD=-std=c++11
 OBJCFLAGS= -I.
-TESTCFLAGS=  -Iobj -I.
+TESTCFLAGS=  -Iobj -I. -g
 
 #搜索库源代码，定义obj编译目录
 SRCPH = $(wildcard src/Unix/*.cpp)

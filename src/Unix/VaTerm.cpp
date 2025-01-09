@@ -130,24 +130,27 @@ void VaTui::Term::fastOutput(const char *str) {
 
 // 非缓冲获取按键，改进以避免影响标准输出刷新
 char VaTui::Term::nonBufferedGetKey() {
-    struct termios oldt, newt;
-    char c;
-    getTerminalAttrsSafely();
-    oldt = currentAttrs;
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    // 确保输出缓冲区能正常刷新
-    newt.c_oflag |= ONLCR;
-    setTerminalAttrsSafely(newt);
-    std::cout.flush();  // 手动刷新标准输出缓冲区
-    if (read(STDIN_FILENO, &c, 1) == 1) {
-        setTerminalAttrsSafely(oldt);
-        std::cout.flush();  // 再次刷新，确保后续输出正常
-        return c;
-    }
-    setTerminalAttrsSafely(oldt);
-    std::cout.flush();  // 恢复属性后再次刷新
-    return 0;  // 如果读取失败，返回空字符
+ struct termios old_term_settings, new_term_settings;
+    int ch;
+
+    // 获取终端当前的属性设置
+    tcgetattr(STDIN_FILENO, &old_term_settings);
+    // 复制当前属性到新的设置结构体，以便后续修改
+    new_term_settings = old_term_settings;
+
+    // 关闭规范输入模式（ICANON），使得输入字符立即可用，无需等待回车键
+    new_term_settings.c_lflag &= ~ICANON;
+
+    // 设置新的终端属性
+    tcsetattr(STDIN_FILENO, TCSANOW, &new_term_settings);
+
+    // 读取一个字符
+    ch = getchar();
+
+    // 恢复终端原来的属性设置
+    tcsetattr(STDIN_FILENO, TCSANOW, &old_term_settings);
+
+    return ch;
 }
 
 // 获取终端类型
