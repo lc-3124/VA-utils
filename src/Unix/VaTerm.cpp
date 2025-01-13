@@ -130,28 +130,23 @@ void VaTui::Term::fastOutput(const char *str) {
 
 // 非缓冲获取按键，改进以避免影响标准输出刷新
 char VaTui::Term::nonBufferedGetKey() {
- struct termios old_term_settings, new_term_settings;
-    int ch;
-
-    // 获取终端当前的属性设置
-    tcgetattr(STDIN_FILENO, &old_term_settings);
-    // 复制当前属性到新的设置结构体，以便后续修改
-    new_term_settings = old_term_settings;
-
-    // 关闭规范输入模式（ICANON），使得输入字符立即可用，无需等待回车键
-    new_term_settings.c_lflag &= ~ICANON;
-
-    // 设置新的终端属性
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_term_settings);
-
-    // 读取一个字符
-    ch = getchar();
-
-    // 恢复终端原来的属性设置
-    tcsetattr(STDIN_FILENO, TCSANOW, &old_term_settings);
-
-    return ch;
+    char buf = 0;
+    struct termios old = {0};
+    if (tcgetattr(0, &old) < 0)
+        perror("tcgetattr()");
+    old.c_lflag &= ~ICANON; // 非规范模式
+    old.c_cc[VMIN] = 1;    // 最少读取一个字符
+    old.c_cc[VTIME] = 0;   // 无超时
+    if (tcsetattr(0, TCSANOW, &old) < 0)
+        perror("tcsetattr()");
+    if (read(0, &buf, 1) < 0)
+        perror("read");
+    // 恢复原始终端属性
+    if (tcsetattr(0, TCSANOW, &old) < 0)
+        perror("tcsetattr()");
+    return (int)buf;
 }
+
 
 // 获取终端类型
 const char* VaTui::Term::getTerminalType() {

@@ -78,4 +78,23 @@ std::string VaTui::System::getRunningDirectory() {
 
 }
 
+std::string VaTui::System::getSystemOuput(const char * cmd) {
+    FILE* pipe = popen(cmd, "r");
+    if (!pipe) {
+        std::cerr << "popen failed!" << std::endl;
+        return "";
+    }
+
+    char buffer[128];
+    std::string result = "";
+    while (!feof(pipe)) {
+        if (fgets(buffer, 128, pipe)!= nullptr) {
+            result += buffer;
+        }
+    }
+
+    pclose(pipe);
+
+    return result;
+}
 #endif

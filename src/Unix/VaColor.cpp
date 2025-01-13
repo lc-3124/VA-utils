@@ -92,6 +92,11 @@ void VaTui::Color::SetEffect(short effect,bool isEnable)
     fastOutput(_SetEffect(effect, isEnable));
 }
 
+void VaTui::Color::ColorEffectReset()
+{
+    fastOutput(_ColorEffectReset());
+}
+
 const char* VaTui::Color::_ColorEffectReset()
 {
     static char escapecommand[64];

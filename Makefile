@@ -20,17 +20,26 @@ OBJPH = $(patsubst src/Unix/%.cpp,obj/%.o,$(SRCPH))
 TESTPH = $(wildcard test/*.cpp)
 BUILDPH=$(patsubst test/%.cpp,build/%,$(TESTPH))
 
+#搜索演示源代码
+DEMOPH = $(wildcard demo/*.cpp)
+BUILDDEMOPH=$(patsubst demo/%.cpp,buildDemo/%,$(DEMOPH))
+
 #主目标:编译OBJ,编译BUILD
-all:$(OBJPH) $(BUILDPH)
+all:$(OBJPH) $(BUILDPH) $(BUILDDEMOPH)
 
 #obj编译规则
 obj/%.o: src/Unix/%.cpp
 	mkdir -p obj
 	$(CC) $(OBJCFLAGS) -c $< -o $@ 
 
-#BUILD编译规则
+#BUILD编译规则 TEST
 build/%: test/%.cpp
 	mkdir -p build 
+	$(CC) $(TESTCFLAGS) -o $@ $< $(OBJPH)
+
+#BUILD编译规则 DEMO
+buildDemo/%: demo/%.cpp
+	mkdir -p buildDemo 
 	$(CC) $(TESTCFLAGS) -o $@ $< $(OBJPH)
 
 #伪目标
@@ -40,7 +49,8 @@ build/%: test/%.cpp
 clean:
 	rm -rf obj
 	rm -rf build
-	@echo 2 dirs had been deleted 
+	rm -rf buildDemo
+	@echo 3 dirs had been deleted 
 
 debug:
 	@echo $(TESTPH)

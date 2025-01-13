@@ -101,6 +101,7 @@ class VaTui::Color{
         static const char* _SetEffect(short effect, bool isEnable);
         static void SetEffect(short effect, bool isEnable);
         static const char* _ColorEffectReset();
+        static void ColorEffectReset();
 
 
         /*
@@ -188,6 +189,7 @@ class VaTui::System {
         static std::string getDeviceName();
         static std::string getHostName();
         static std::string getRunningDirectory();
+        static std::string getSystemOuput(const char* cmd);
 };
 
 /*
