@@ -1,51 +1,62 @@
-#编译文件
-#我只是为了让我的LSP正常工作，所以不要在意这个文件是否能有效完成编译任务
+# 编译文件
+# 我只是为了让我的 LSP 正常工作，所以不要在意这个文件是否能有效完成编译任务
 
 # 
-# 这个Makefile文件的作用是编译所有源代码为obj，
-# 然后以obj和inc为依赖编译所有test源码到build目录下
+# 这个 Makefile 文件的作用是编译所有源代码为 obj，
+# 然后以 obj 和 inc 为依赖编译所有 test 源码到 build 目录下
 #
 
-#目录、环境变量
+# 目录、环境变量
 CC=g++
 CSTD=-std=c++11
-OBJCFLAGS= -I.
-TESTCFLAGS=  -Iobj -I. -g
+OBJCFLAGS= -I. -Iinc  # 增加对 inc 目录的头文件搜索，通常需要将 inc 目录加入到头文件搜索路径
+TESTCFLAGS=  -Iobj -I. -Iinc -g  # 增加对 inc 目录的头文件搜索，通常需要将 inc 目录加入到头文件搜索路径
 
-#搜索库源代码，定义obj编译目录
+# 搜索库源代码，定义 obj 编译目录
 SRCPH = $(wildcard src/Unix/*.cpp)
 OBJPH = $(patsubst src/Unix/%.cpp,obj/%.o,$(SRCPH))
 
-#搜索测试源代码，定义build目录
+# 搜索测试源代码，定义 build 目录
 TESTPH = $(wildcard test/*.cpp)
 BUILDPH=$(patsubst test/%.cpp,build/%,$(TESTPH))
 
-#搜索演示源代码
-DEMOPH = $(wildcard demo/*.cpp)
+# 搜索演示源代码，定义 buildDemo 目录
+DEMOPH = $(wildcard demo/*/*.cpp)
 BUILDDEMOPH=$(patsubst demo/%.cpp,buildDemo/%,$(DEMOPH))
 
-#主目标:编译OBJ,编译BUILD
-all:$(OBJPH) $(BUILDPH) $(BUILDDEMOPH)
+# 主目标: 编译 OBJ, 编译 BUILD
+all:pre $(OBJPH) $(BUILDPH) $(BUILDDEMOPH) end
 
-#obj编译规则
+# obj 编译规则
 obj/%.o: src/Unix/%.cpp
-	mkdir -p obj
-	$(CC) $(OBJCFLAGS) -c $< -o $@ 
+	@echo -e "\n \e[33m现在编译\e[32m$<\e[33m成为 \e[32m$@\e[0m "
+	@mkdir -p $(dir $@) 
+	$(CC) $(CSTD) $(OBJCFLAGS) -c $< -o $@ 
 
-#BUILD编译规则 TEST
+# BUILD 编译规则 TEST
 build/%: test/%.cpp
-	mkdir -p build 
-	$(CC) $(TESTCFLAGS) -o $@ $< $(OBJPH)
+	@echo -e "\n \e[33m现在编译\e[32m$<\e[33m成为 \e[32m$@\e[0m "
+	@mkdir -p $(dir $@)  
+	$(CC) $(CSTD) $(TESTCFLAGS) -o $@ $< $(OBJPH)
 
-#BUILD编译规则 DEMO
+# BUILD 编译规则 DEMO
 buildDemo/%: demo/%.cpp
-	mkdir -p buildDemo 
-	$(CC) $(TESTCFLAGS) -o $@ $< $(OBJPH)
+	@echo -e "\n \e[33m现在编译\e[32m$<\e[33m成为 \e[32m$@\e[0m "
+	@mkdir -p $(dir $@) 
+	$(CC) $(CSTD) $(TESTCFLAGS) -o $@ $< $(OBJPH)
 
-#伪目标
-.PHONY:
-	clean
-#清除目录
+# 伪目标
+.PHONY: clean pre end
+
+# 提示语
+pre:
+	@echo -e "\e[45m 编译开始...... \e[0m\n"
+	@echo -e "\e[45m 助你好运哟~    \e[0m"
+	@sleep 1
+
+end:
+	@echo -e "\n\e[45m 编译完成！     \e[0m"
+# 清除目录
 clean:
 	rm -rf obj
 	rm -rf build
@@ -55,3 +66,4 @@ clean:
 debug:
 	@echo $(TESTPH)
 	@echo $(BUILDPH)
+
