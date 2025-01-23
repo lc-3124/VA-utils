@@ -270,10 +270,11 @@ class VaTui::Utf {
         //详见手册
         size_t getUtf8CharWidth(const char* s);
 
-        bool isAscii(char c);
-        bool isUtf8StartByte(char c);
-        bool isUtf8Char(const char* bytes, int len);
-        bool isGbkChar(const char* bytes, int len);
+        static int getUtf8ByteCount(char c);
+        static bool isAscii(char c);
+        static bool isUtf8StartByte(char c);
+        static bool isUtf8Char(const char* bytes, int len);
+        static bool isGbkChar(const char* bytes, int len);
 };
 
 #endif

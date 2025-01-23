@@ -30,9 +30,12 @@ bool VaTui::Utf::isAscii(char c) {
 
 // 判断是否为 UTF-8 多字节序列的开头字节
 bool VaTui::Utf::isUtf8StartByte(char c) {
-    return (c & 0xC0)!= 0x80 && (c & 0xF0)!= 0xF8 && (c & 0xFE)!= 0xFC;
-
+    // 将 char 类型转换为 unsigned char 类型，避免符号位影响按位与操作
+    unsigned char uc = static_cast<unsigned char>(c);
+    // UTF-8 多字节序列的后续字节以 10 开头，所以只要不是以 10 开头就是开头字节
+    return (uc & 0xC0) != 0x80;
 }
+
 
 // 判断是否为 UTF-8 编码字符
 bool VaTui::Utf::isUtf8Char(const char* bytes, int len) {
@@ -60,6 +63,24 @@ bool VaTui::Utf::isGbkChar(const char* bytes, int len) {
     return ((firstByte >= 0x81 && firstByte <= 0xFE) && (secondByte >= 0x40 && secondByte <= 0xFE && secondByte!= 0x7F));
 
 }
-
+ 
+int VaTui::Utf::getUtf8ByteCount(char c) {
+            unsigned char uc = static_cast<unsigned char>(c);
+            if ((uc & 0x80) == 0) {
+                // 单字节字符 (0xxxxxxx)
+                return 1;
+            } else if ((uc & 0xE0) == 0xC0) {
+                // 双字节字符 (110xxxxx)
+                return 2;
+            } else if ((uc & 0xF0) == 0xE0) {
+                // 三字节字符 (1110xxxx)
+                return 3;
+            } else if ((uc & 0xF8) == 0xF0) {
+                // 四字节字符 (11110xxx)
+                return 4;
+            }
+            // 无效的 UTF-8 起始字节
+            return -1; 
+        }
 
 #endif
