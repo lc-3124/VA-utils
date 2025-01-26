@@ -275,6 +275,9 @@ class VaTui::Utf {
         static bool isUtf8StartByte(char c);
         static bool isUtf8Char(const char* bytes, int len);
         static bool isGbkChar(const char* bytes, int len);
+        //从一段字符串中获取第index个Utf8字符,返回是否成功
+        static bool getUtf8CharaInString( std::string resource , std::string &save , int index ) ;
+        static int  getUtf8StringLen( std::string resource );
 };
 
 #endif

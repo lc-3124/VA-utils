@@ -46,7 +46,7 @@ buildDemo/%: demo/%.cpp
 	$(CC) $(CSTD) $(TESTCFLAGS) -o $@ $< $(OBJPH)
 
 # 伪目标
-.PHONY: clean pre end
+.PHONY: clean pre end install 
 
 # 提示语
 pre:
@@ -62,6 +62,9 @@ clean:
 	rm -rf build
 	rm -rf buildDemo
 	@echo 3 dirs had been deleted 
+
+install:
+	cp res/lib.txt ~/.pinyinglib.txt
 
 debug:
 	@echo $(TESTPH)
