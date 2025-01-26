@@ -30,13 +30,13 @@ g++ -o main main.cpp -lVAWK
 1. 基本能用了，就是欠一点调教，以及还有几个没有实现的功能
 2. 进行一些更改，修复了一些BUG
 3. 添加了一个没啥用的测试
+4. 添加了中文转拼音的方法，在VAuntils类中
 
 # 任务
+- [ ] 解决 char2pinyin2方法无法正确返回英文的情况
 - [ ] 打算加入VaColor模块生成256色号的程序，通过RGB三个分量(0~5)来指定颜色(VaTui.hpp L127)
-- [ ] 加入一个关于键盘监听的程序，类似windows下的GetAsyncKeyState,我打算通过读取/dev/input/event5来在linux下实现
 
 ## 下阶段任务:
 - [x] 完成各个模块源码和声明的分离
-- [ ] 好好复习，备战期末
 - [ ] 编写Windows的实现
 - [ ] 整合到VAWK中
