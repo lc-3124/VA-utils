@@ -51,7 +51,7 @@ buildDemo/%: demo/%.cpp
 # 提示语
 pre:
 	@echo -e "\e[45m 编译开始...... \e[0m\n"
-	@echo -e "\e[45m 助你好运哟~    \e[0m"
+	@echo -e "\e[45m 祝你好运哟~    \e[0m"
 	@sleep 1
 
 end:
