@@ -4,13 +4,13 @@
  * 这是一个工具类，包括中文转拼音等
  *
  */
-#ifndef _VAUNTILS_HPP_
-#define _VAUNTILS_HPP_
+#ifndef _VAUTILS_HPP_
+#define _VAUTILS_HPP_
 
 #include <string>
 #include <vector>
 
-class VaUntils {
+class VaUtils {
 private:
 public:
     static bool Char2Pinyin(const std::string resource, std::string& Pinying);

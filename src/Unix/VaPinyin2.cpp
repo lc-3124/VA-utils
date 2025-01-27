@@ -8,9 +8,9 @@
 #define _VAPINYIN2_CPP_
 
 #include "VaTui.hpp"
-#include "VaUntils.hpp"
+#include "VaUtils.hpp"
 
-bool VaUntils::Char2Pinyin2(const std::string resource,std::vector<std::string> &Pinyin)
+bool VaUtils::Char2Pinyin2(const std::string resource,std::vector<std::string> &Pinyin)
 {
     int size = VaTui::Utf::getUtf8StringLen( resource );
 
