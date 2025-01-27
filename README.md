@@ -1,5 +1,5 @@
-# VA-untils
-untils for VAWK
+# VA-utils
+utils for VAWK
 
 # 介绍：
 - 这是写我的一组小软件`VAWK`(Visual Ansi Widget kit)的工具类
@@ -33,7 +33,7 @@ g++ -o main main.cpp -lVAWK
 4. 添加了中文转拼音的方法，在VAuntils类中
 
 # 任务
-- [ ] 解决 char2pinyin2方法无法正确返回英文的情况
+- [x] 解决 char2pinyin2方法无法正确返回英文的情况
 - [ ] 打算加入VaColor模块生成256色号的程序，通过RGB三个分量(0~5)来指定颜色(VaTui.hpp L127)
 
 ## 下阶段任务:

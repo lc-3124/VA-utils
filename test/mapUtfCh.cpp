@@ -9,10 +9,16 @@ using std::string ;
 
 int main () 
 {
-std::vector<std::string> py ;
-std::string res;
-std::cin>>res ;
-VaUtils::Char2Pinyin2( res , py  );
-std::cout<< py[3];
+   std::vector<std::string> py ;
+   std::string res;
+   std::cin>>res ;
+   VaUtils::Char2Pinyin2( res , py  );
+
+   for(int i=0 ; i<py.size() ; i++)
+   {
+      std::cout<< py.at(i) <<" ";
+   }
+   std::cout<<"\n";
+
    return 0;
 }
