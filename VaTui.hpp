@@ -125,7 +125,8 @@ class VaTui::Color{
         static int AntiAnsi256Color(int colorcode);
         static int Ansi16ColorToAnsi256(int ansi16Color);
         static int Ansi256ColorToAnsi16(int ansi256Color);
-        //以下几个还没有实现 (Lc3124 3418746552@qq.com)
+        // TODO (Lc3124 github.com:lc-3124  mail:3418746552@qq.com)
+        //以下几个还没有实现 
         //4bit颜色是有前景和背景之分的，这里根据isFrontOrBack
         static int Ansi256ColorToAnsi4bit(int ansi256Color, bool isFrontOrBack);
         //因为16色和256色兼容，所以只做4到16色转换

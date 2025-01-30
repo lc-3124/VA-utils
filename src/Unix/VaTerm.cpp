@@ -17,7 +17,7 @@ termios currentAttrs;
 
 // 辅助函数，用于安全地设置终端属性，添加异常处理机制
 void VaTui::Term::setTerminalAttrsSafely(const termios &newAttrs) {
-    if (tcsetattr(STDIN_FILENO, TCSANOW, &newAttrs)!= 0) {
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &newAttrs) != 0) {
         throw std::runtime_error("Failed to set terminal attributes.");
     }
     currentAttrs = newAttrs;
@@ -25,7 +25,7 @@ void VaTui::Term::setTerminalAttrsSafely(const termios &newAttrs) {
 
 // 辅助函数，用于安全地获取终端属性，添加异常处理机制
 void VaTui::Term::getTerminalAttrsSafely() {
-    if (tcgetattr(STDIN_FILENO, &currentAttrs)!= 0) {
+    if (tcgetattr(STDIN_FILENO, &currentAttrs) != 0) {
         throw std::runtime_error("Failed to get terminal attributes.");
     }
 }
@@ -39,29 +39,19 @@ void VaTui::Term::SaveTerm() {
 // 恢复终端原始设置
 void VaTui::Term::RestoreTerm() {
     setTerminalAttrsSafely(originalAttrs);
-   // system("reset");
+    // system("reset");
 }
 
 // 清空整个屏幕
-const char* VaTui::Term::_Clear() {
-    return "\033[2J";
-}
-void VaTui::Term::Clear() {
-    fastOutput("\033[2J");
-}
+const char *VaTui::Term::_Clear() { return "\033[2J"; }
+void VaTui::Term::Clear() { fastOutput("\033[2J"); }
 
 // 清空从光标位置到行尾的区域
-const char* VaTui::Term::_ClearLine() {
-    return "\033[K";
-}
-void VaTui::Term::ClearLine() {
-    fastOutput("\033[K");
-}
+const char *VaTui::Term::_ClearLine() { return "\033[K"; }
+void VaTui::Term::ClearLine() { fastOutput("\033[K"); }
 
 // 获取终端属性
-void VaTui::Term::getTerminalAttributes() {
-    getTerminalAttrsSafely();
-}
+void VaTui::Term::getTerminalAttributes() { getTerminalAttrsSafely(); }
 
 // 设置终端属性
 void VaTui::Term::setTerminalAttributes(const termios &newAttrs) {
@@ -108,19 +98,19 @@ void VaTui::Term::getTerminalSize(int &rows, int &cols) {
 // 设置光标位置
 void VaTui::Term::setCursorPosition(int row, int col) {
     std::cout << "\033[" << row << ";" << col << "H";
-    std::cout.flush();  // 手动刷新输出缓冲区，确保光标位置及时更新显示
+    std::cout.flush(); // 手动刷新输出缓冲区，确保光标位置及时更新显示
 }
 
 // 保存光标位置
 void VaTui::Term::saveCursorPosition() {
     std::cout << "\033[s";
-    std::cout.flush();  // 刷新输出缓冲区，保证保存操作生效
+    std::cout.flush(); // 刷新输出缓冲区，保证保存操作生效
 }
 
 // 恢复光标位置
 void VaTui::Term::restoreCursorPosition() {
     std::cout << "\033[u";
-    std::cout.flush();  // 刷新输出缓冲区，保证恢复操作生效
+    std::cout.flush(); // 刷新输出缓冲区，保证恢复操作生效
 }
 
 // 快速输出内容到终端
@@ -135,8 +125,8 @@ char VaTui::Term::nonBufferedGetKey() {
     if (tcgetattr(0, &old) < 0)
         perror("tcgetattr()");
     old.c_lflag &= ~ICANON; // 非规范模式
-    old.c_cc[VMIN] = 1;    // 最少读取一个字符
-    old.c_cc[VTIME] = 0;   // 无超时
+    old.c_cc[VMIN] = 1;     // 最少读取一个字符
+    old.c_cc[VTIME] = 0;    // 无超时
     if (tcsetattr(0, TCSANOW, &old) < 0)
         perror("tcsetattr()");
     if (read(0, &buf, 1) < 0)
@@ -147,11 +137,8 @@ char VaTui::Term::nonBufferedGetKey() {
     return (int)buf;
 }
 
-
 // 获取终端类型
-const char* VaTui::Term::getTerminalType() {
-    return std::getenv("TERM");
-}
+const char *VaTui::Term::getTerminalType() { return std::getenv("TERM"); }
 
 // 设置行缓冲模式
 void VaTui::Term::setLineBuffering(bool enable) {
@@ -178,7 +165,7 @@ bool VaTui::Term::isTerminalFeatureSupported(const char *feature) {
     if (termType == nullptr) {
         return false;
     }
-    return (strstr(termType, feature)!= nullptr);
+    return (strstr(termType, feature) != nullptr);
 }
 
 // 设置字符输入延迟
