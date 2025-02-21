@@ -10,19 +10,20 @@
 #include "VaTui.hpp"
 #include "VaUtils.hpp"
 
-bool VaUtils::Char2Pinyin2(const std::string resource,std::vector<std::string> &Pinyin)
+bool
+    VaUtils::Chinese::Char2Pinyin2 ( const std::string         resource,
+                                     std::vector<std::string> &Pinyin )
 {
-    int size = VaTui::Utf::getUtf8StringLen( resource );
+    int size = VaTui::Utf::getUtf8StringLen ( resource );
 
-    for ( int cnt=0 ; cnt < size ; cnt++ )
-    {
-        std::string indexChar , py;
-        VaTui::Utf::getUtf8CharaInString( resource , indexChar , cnt );
-        Char2Pinyin( indexChar , py ); 
-        Pinyin.push_back(py);
-    }
-    if(Pinyin.empty() != 0)
-        return true;
+    for ( int cnt = 0; cnt < size; cnt++ )
+        {
+            std::string indexChar, py;
+            VaTui::Utf::getUtf8CharaInString ( resource, indexChar, cnt );
+            Char2Pinyin ( indexChar, py );
+            Pinyin.push_back ( py );
+        }
+    if ( Pinyin.empty () != 0 ) return true;
     return false;
 }
 
