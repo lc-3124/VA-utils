@@ -14,6 +14,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <algorithm>
 // sys
 #include <unistd.h>
 
@@ -117,6 +118,9 @@ const char* VaTui::Color::_ColorEffectReset()
 */
 
 
+/*
+ * 预期范围内似乎没有问题，但是没有检查输入
+ */
 int VaTui::Color::RgbToAnsi256Color( int r,int g,int b )
 {
     int gray = 0.299 * r + 0.587 * g + 0.114 * b;
@@ -300,6 +304,10 @@ int VaTui::Color::AntiAnsi256Color(int colorcode)
     return RgbToAnsi256Color(r, g, b);
 }
 
+/*
+ * 下面这一段不是我写的，是deepseek生成的代码，
+ * 我会测试他们的
+ */
 // 将 ANSI 16 色转换为 ANSI 256 色的函数
 int VaTui::Color::Ansi16ColorToAnsi256(int ansi16Color)
 {
@@ -332,6 +340,52 @@ int VaTui::Color::Ansi256ColorToAnsi16(int ansi256Color)
     return 0;  // 如果传入的 256 色代码不符合规范，返回默认值（这里返回0，可根据实际情况调整）
 }
 
-//
 
+int VaTui::Color::Ansi256ColorToAnsi4bit(int ansi256Color, bool isFrontOrBack) {
+    if (ansi256Color < 16) {
+        // 如果已经是4bit颜色，直接返回
+        return ansi256Color;
+    }
+
+    if (ansi256Color >= 232) {
+        // 处理灰度颜色
+        int gray = ansi256Color - 232;
+        if (gray < 4) return isFrontOrBack ? 30 : 40; // 黑色
+        if (gray < 8) return isFrontOrBack ? 90 : 100; // 亮黑色
+        if (gray < 12) return isFrontOrBack ? 37 : 47; // 白色
+        return isFrontOrBack ? 97 : 107; // 亮白色
+    }
+
+    // 处理彩色
+    int colorIndex = ansi256Color - 16;
+    int r = (colorIndex / 36) % 6;
+    int g = (colorIndex / 6) % 6;
+    int b = colorIndex % 6;
+
+    // 将6级颜色映射到4级颜色
+    r = r < 3 ? 0 : 1;
+    g = g < 3 ? 0 : 1;
+    b = b < 3 ? 0 : 1;
+
+    int ansi4bitColor = (r << 2) | (g << 1) | b;
+
+    // 映射到4bit颜色
+    static const int ansi4bitMap[] = {
+        0, 4, 2, 6, 1, 5, 3, 7
+    };
+
+    int result = ansi4bitMap[ansi4bitColor];
+
+    // 如果是前景色，返回前景色代码，否则返回背景色代码
+    return isFrontOrBack ? result + 30 : result + 40;
+}
+
+int VaTui::Color::Ansi4bitColorToAnsi16(int ansi4bitColor) {
+    // 4bit颜色直接映射到16色
+    if (ansi4bitColor < 8) {
+        return ansi4bitColor;
+    } else {
+        return ansi4bitColor + 8;
+    }
+}
 #endif 

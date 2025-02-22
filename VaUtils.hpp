@@ -11,7 +11,7 @@
 #include <vector>
 
 /*************************************/
-/*     MainModule definitoin         */
+/*     MainModule definition         */
 /*************************************/
 
 /*
@@ -38,13 +38,15 @@ class VaUtils::Chinese
 {
   public:
     static bool Char2Pinyin ( const std::string resource,
-                              std::string &     Pinying );
+                              std::string      &Pinying );
     static bool Char2Pinyin2 ( const std::string         resource,
                                std::vector<std::string> &Pinyin );
 };
 
 /*
- *
+ * 文件模块下有多个类
+ * 允许用户对一个文件对象简单方便地进行操作
+ * 详细请见 SubModule definition
  */
 class VaUtils::File
 {
@@ -55,7 +57,7 @@ class VaUtils::File
 };
 
 /*************************************/
-/*     SubModule definitoin          */
+/*     SubModule definition          */
 /*************************************/
 
 /*
@@ -63,8 +65,6 @@ class VaUtils::File
  */
 class VaUtils::File::VaFile
 {
-  public:
-    void a ();
 };
 
 class VaUtils::File::VaIniFile : public VaFile
