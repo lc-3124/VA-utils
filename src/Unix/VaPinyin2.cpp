@@ -11,6 +11,7 @@
 #include "VaUtils.hpp"
 
 bool
+
     VaUtils::Chinese::Char2Pinyin2 ( const std::string         resource,
                                      std::vector<std::string> &Pinyin )
 {

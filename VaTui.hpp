@@ -125,8 +125,6 @@ class VaTui::Color
     static int  AntiAnsi256Color ( int colorcode );
     static int  Ansi16ColorToAnsi256 ( int ansi16Color );
     static int  Ansi256ColorToAnsi16 ( int ansi256Color );
-    /* TODO (Mail:lc3124@aliyun.com))*/
-    //以下几个还没有实现
     // 4bit颜色是有前景和背景之分的，这里根据isFrontOrBack来决定操作对象
     static int Ansi256ColorToAnsi4bit ( int ansi256Color, bool isFrontOrBack );
     //因为16色和256色兼容，所以只做4到16色转换
@@ -290,7 +288,6 @@ class VaTui::Utf
     static int getUtf8StringLen ( std::string resource );
     /* TODO */
     // 获取一个字符串在常规显示屏上的等宽字体tty上占用的宽度
-    // Get String Width On Srceen
     static int getStrWidthOs ( std::string resource );
 };
 

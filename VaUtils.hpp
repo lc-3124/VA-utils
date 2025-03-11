@@ -11,7 +11,7 @@
 #include <vector>
 
 /*************************************/
-/*     MainModule definitoin         */
+/*     MainModule definition         */
 /*************************************/
 
 /*
@@ -38,7 +38,7 @@ class VaUtils::Chinese
 {
   public:
     static bool Char2Pinyin ( const std::string resource,
-                              std::string &     Pinying );
+                              std::string      &Pinying );
     static bool Char2Pinyin2 ( const std::string         resource,
                                std::vector<std::string> &Pinyin );
 };
@@ -61,7 +61,7 @@ class VaUtils::File
 };
 
 /*************************************/
-/*     SubModule definitoin          */
+/*     SubModule definition          */
 /*************************************/
 
 /*
