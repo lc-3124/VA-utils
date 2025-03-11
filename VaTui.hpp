@@ -243,7 +243,7 @@ class VaTui::Term
     //返回终端类型
     static const char *getTerminalType ();
     //启、禁用行缓冲
-    void setLineBuffering ( bool enable );
+    static void setLineBuffering ( bool enable );
     //类似getch()，但没有终端回显，副作用是执行完后会把回显打开
     static char getCharacter ();
     //检查feature是否支持

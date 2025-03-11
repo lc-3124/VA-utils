@@ -29,19 +29,19 @@ all:pre $(OBJPH) $(BUILDPH) $(BUILDDEMOPH) end
 
 # obj 编译规则
 obj/%.o: src/Unix/%.cpp
-	@echo -e "\n \e[33m现在编译\e[32m$<\e[33m成为 \e[32m$@\e[0m "
+	@echo  "\n \e[33m现在编译\e[32m$<\e[33m成为 \e[32m$@\e[0m "
 	@mkdir -p $(dir $@) 
 	$(CC) $(CSTD) $(OBJCFLAGS) -c $< -o $@ 
 
 # BUILD 编译规则 TEST
 build/%: test/%.cpp
-	@echo -e "\n \e[33m现在编译\e[32m$<\e[33m成为 \e[32m$@\e[0m "
+	@echo  "\n \e[33m现在编译\e[32m$<\e[33m成为 \e[32m$@\e[0m "
 	@mkdir -p $(dir $@)  
 	$(CC) $(CSTD) $(TESTCFLAGS) -o $@ $< $(OBJPH)
 
 # BUILD 编译规则 DEMO
 buildDemo/%: demo/%.cpp
-	@echo -e "\n \e[33m现在编译\e[32m$<\e[33m成为 \e[32m$@\e[0m "
+	@echo  "\n \e[33m现在编译\e[32m$<\e[33m成为 \e[32m$@\e[0m "
 	@mkdir -p $(dir $@) 
 	$(CC) $(CSTD) $(TESTCFLAGS) -o $@ $< $(OBJPH)
 
@@ -50,12 +50,12 @@ buildDemo/%: demo/%.cpp
 
 # 提示语
 pre:
-	@echo -e "\e[45m 编译开始...... \e[0m\n"
-	@echo -e "\e[45m 祝你好运哟~    \e[0m"
+	@echo  "\e[45m 编译开始...... \e[0m\n"
+	@echo  "\e[45m 祝你好运哟~    \e[0m"
 	@sleep 1
 
 end:
-	@echo -e "\n\e[45m 编译完成！     \e[0m"
+	@echo  "\n\e[45m 编译完成！     \e[0m"
 # 清除目录
 clean:
 	rm -rf obj
